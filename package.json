@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/alekseik1/2018-FS-11-Frontend-Kozharin/issues"
   },
-  "homepage": "https://github.com/alekseik1/2018-FS-11-Frontend-Kozharin#readme"
+  "homepage": "https://github.com/alekseik1/2018-FS-11-Frontend-Kozharin#readme",
+  "dependencies": {
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
+  }
 }
