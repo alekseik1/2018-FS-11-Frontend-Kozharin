@@ -1,7 +1,7 @@
 const say = function (name) {
     let d = document.createElement("div");
     let textNode = document.createTextNode("Hello from js!");
-    d.style.backgroundColor = "green";
+    d.setAttribute("class", "myCustomDiv");
     d.appendChild(textNode);
     document.body.appendChild(d);
 
