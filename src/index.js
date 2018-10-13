@@ -1,3 +1,3 @@
-import say from './lib/test.js'
+import say from './lib/test';
 
 say('world');

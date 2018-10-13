@@ -7,5 +7,9 @@ module.exports = {
     ],
     env: {
         node: true,
+        browser: true
     },
+    rules: {
+        'indent': ['error', 4]
+    }
 };
