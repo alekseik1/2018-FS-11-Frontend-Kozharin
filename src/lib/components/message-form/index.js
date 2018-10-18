@@ -7,7 +7,7 @@ const template = `
 	<style>${shadowStyles.toString()}</style>
 	<form>
 		<div class="result"></div>
-		<form-input name="message_text" placeholder="Введите сообщеине" slot="message-input">
+		<form-input name="message_text" placeholder="Введите сообщение" slot="message-input">
 			<span slot="icon"></span>
 		</form-input>
 	</form>
