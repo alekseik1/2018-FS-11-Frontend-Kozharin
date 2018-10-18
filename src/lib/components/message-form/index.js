@@ -8,13 +8,13 @@ const template = `
 	<form>
 		<div class="result"></div>
 		<form-input name="message_text" placeholder="Введите сообщение" slot="message-input">
-			<span slot="icon"></span>
+			<span slot="icon"><img src="../../static/ic_send_black_24dp.png"></span>
 		</form-input>
 	</form>
 `;
 
 class MessageForm extends HTMLElement {
-    constructor () {
+        constructor () {
         super();
         const shadowRoot = this.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = template;
