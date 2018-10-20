@@ -52,6 +52,9 @@ class MessageForm extends HTMLElement {
         this._elements.message.innerText = Array.from(this._elements.form.elements).map(
             el => el.value
         ).join(', ');
+        var d = new Date();
+        this._elements.message.insertAdjacentHTML('beforeend',
+            `<div class="sent_time"> ${d.getHours()}:${d.getMinutes()}</div>`);
         event.preventDefault();
         return false;
     }
