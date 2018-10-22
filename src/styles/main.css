@@ -92,11 +92,13 @@ body {
 
 #menu_button {
     float: right;
+    height: 25px;
+    margin-top: 7px;
 }
 
 #search_button {
     margin-top: 7px;
     float: right;
-    margin-right: 17px;
-    height: 22px;
+    margin-right: 5px;
+    height: 25px;
 }

@@ -1,11 +1,15 @@
 form-input {
+	position: fixed;
+	left: 0;
+	bottom: 0;
 	width: 100%;
-}
+	background: #ffffff;}
 
 .result {
 	align-content: flex-start;
 	flex-basis: 50%;
 	margin-top: 10px;
+	margin-left: 5px;
 	padding: 10px 15px 0 15px;
 	border: 1px solid #c1b6c3;
 	border-radius: 5px;
