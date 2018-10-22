@@ -1,11 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="src/styles/app.css">
+    <title>Messenger</title>
+    <link rel="stylesheet" href="src/styles/main.css">
 </head>
 <body>
-<script src="./dist/main.js"></script>
+<div class="header">
+    <img src="static/ic_arrow_back_white_24dp.png" id="back_img">
+    <div class="content">
+        <div class="name">Jeniffer</div>
+        <div class="last_seen">was online just now</div>
+    </div>
+    <img src="static/ic_more_vert_white_24dp.png" alt="Menu" id="menu_button">
+    <img src="static/ic_search_white_24dp.png" alt="Search" id="search_button">
+</div>
+<div class="messages_content">
+    <div class="messages_container">
+        <div class="other_messages">
+            <div class="message">Do you like my picture?</div>
+            <div class="time">10:53</div>
+            <img src="static/ic_done_all_white_24dp.png" alt="">
+        </div>
+    </div>
+    <div>
+        <div class="own_messages">
+            <div class="message">Yes, I really like it!</div>
+            <div class="time">10:61</div>
+            <img src="static/ic_done_all_white_24dp.png" alt="">
+        </div>
+    </div>
+</div>
+<div class="input_place">
+    <form action="#" method="post" name="send_message">
+        <div>
+            <input id="sender" type="text" placeholder="Write a message..." autocomplete="off">
+        </div>
+    </form>
+</div>
 </body>
+<script src="./dist/create/bundle.js"></script>
 </html>

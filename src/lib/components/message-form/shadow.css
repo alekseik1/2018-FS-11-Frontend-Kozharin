@@ -1,0 +1,25 @@
+form-input {
+	width: 100%;
+}
+
+.result {
+	align-content: flex-start;
+	flex-basis: 50%;
+	margin-top: 10px;
+	padding: 10px 15px 0 15px;
+	border: 1px solid #c1b6c3;
+	border-radius: 5px;
+
+    float: left;
+    background-color: #f3e5f5;
+}
+
+.sent_time {
+	color: gray;
+	flex: 30%;
+	font-size: 75%;
+}
+
+input[type=submit] {
+	visibility: collapse;
+}
