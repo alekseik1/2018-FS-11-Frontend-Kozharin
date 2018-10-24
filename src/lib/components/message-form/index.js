@@ -57,6 +57,11 @@ class MessageForm extends HTMLElement {
      * @returns {HTMLElement} Объект сообщения
      */
     createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true) {
+        var parentDiv = document.createElement(`div`);
+        if(isOwn)
+            parentDiv.className = `messageBubbleOwn`;
+        else
+            parentDiv.className = `messageBubbleOther`;
         var messageDiv = document.createElement(`div`);
         if(isOwn)
             messageDiv.className = "own_messages";
@@ -65,11 +70,12 @@ class MessageForm extends HTMLElement {
         messageDiv.innerText = messageContent.text;
         messageDiv.insertAdjacentHTML('beforeend',
             `<div class="sent_time"> ${date.getHours()}:${date.getMinutes()}</div>`);
-        return messageDiv;
+        parentDiv.appendChild(messageDiv);
+        return parentDiv;
     }
 
     _onSubmit (event) {
-        this._elements.message.innerText = Array.from(this._elements.form.elements).map(
+        var input_text = Array.from(this._elements.form.elements).map(
             el => el.value
         ).join(', ');
         var d = new Date();
@@ -77,14 +83,14 @@ class MessageForm extends HTMLElement {
 
 
 
-        messageContent.text = this._elements.message.innerText;
+        messageContent.text = input_text;
         // Для дебага: четные свои, нечетные -- чужие
         var isOwn = false;
         if (this.messageNumber % 2 === 0) {
             isOwn = true;
         }
         var mes = this.createMessageDiv(messageContent, d, this.messageNumber, isOwn);
-        this._elements.form.appendChild(mes);
+        this._elements.message.appendChild(mes);
         this.messageNumber++;
 
 

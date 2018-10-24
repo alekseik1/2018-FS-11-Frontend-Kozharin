@@ -8,26 +8,39 @@ form-input {
 	font-size: 75%;
 }
 
+.result {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
 input[type=submit] {
 	visibility: collapse;
 }
 
 .other_messages, .own_messages {
     align-content: flex-start;
-    flex-basis: 50%;
     margin-top: 10px;
     padding: 10px 15px 0 15px;
     border: 1px solid #c1b6c3;
     border-radius: 5px;
 }
 .other_messages {
-    float: left;
     background-color: greenyellow;
+}
+
+.messageBubbleOther {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.messageBubbleOwn {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .own_messages {
     background-color: #f3e5f5;
-    float: right;
 }
 
 .messages_container {
