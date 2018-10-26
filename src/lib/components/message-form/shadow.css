@@ -2,24 +2,58 @@ form-input {
 	width: 100%;
 }
 
-.result {
-	align-content: flex-start;
-	flex-basis: 50%;
-	margin-top: 10px;
-	padding: 10px 15px 0 15px;
-	border: 1px solid #c1b6c3;
-	border-radius: 5px;
-
-    float: left;
-    background-color: #f3e5f5;
-}
-
 .sent_time {
 	color: gray;
 	flex: 30%;
 	font-size: 75%;
 }
 
+.result {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
 input[type=submit] {
 	visibility: collapse;
+}
+
+.other_messages, .own_messages {
+    align-content: flex-start;
+    margin-top: 10px;
+    padding: 10px 15px 0 15px;
+    border: 1px solid #c1b6c3;
+    border-radius: 5px;
+}
+.other_messages {
+    background-color: greenyellow;
+}
+
+.messageBubbleOther {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.messageBubbleOwn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.own_messages {
+    background-color: #f3e5f5;
+}
+
+.messages_container {
+    display: flex;
+
+}
+
+.messages_input {
+    display: flex;
+    border-radius: 8pt;
+    padding: 3pt 3pt 3pt 3pt;
+}
+
+#main_form {
+    margin: 3pt 3pt 3pt 3pt;
 }
