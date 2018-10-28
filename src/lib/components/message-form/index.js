@@ -95,7 +95,8 @@ class MessageForm extends HTMLElement {
 
 
 
-
+        // alert(this._elements.form.value);
+        this._elements.form.value = "";
         event.preventDefault();
         return false;
     }

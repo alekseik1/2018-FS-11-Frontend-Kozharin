@@ -2,15 +2,10 @@ body {
     background-color: whitesmoke;
 }
 .header {
-    margin-left: -8px;
-    margin-top: -8px;
-    flex: auto;
-    position: fixed;
-    height:  40px;
-    width: 100%;
+    display: flex;
     background-color: #8e24aa;
     font-family: 'Roboto', sans-serif;
-    border-bottom: #6918b4 solid 1px;
+    margin: -8pt -8pt 0 -8pt;
 }
 
 .messages_content {
@@ -19,11 +14,11 @@ body {
     flex-direction: column;
 }
 
-.header > .content {
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
-    margin-left: 14ch;
+.header > .senderInfo {
+    margin-left: 2ch;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
     color: white;
 }
 
@@ -33,24 +28,6 @@ body {
     bottom: 0;
     width: 100%;
     background: #ffffff;
-}
-
-.other_messages, .own_messages {
-    align-content: flex-start;
-    flex-basis: 50%;
-    margin-top: 10px;
-    padding: 10px 15px 0 15px;
-    border: 1px solid #c1b6c3;
-    border-radius: 5px;
-}
-.other_messages {
-    float: left;
-    background-color: greenyellow;
-}
-
-.own_messages {
-    background-color: #f3e5f5;
-    float: right;
 }
 
 .time, .last_seen {
@@ -63,26 +40,14 @@ body {
     color: #c9c9c9;
 }
 
-.messages_content {
-    padding: 40px 0 0 0;
-    font-family: 'Roboto', sans-serif;
-}
-
-#sender {
-    font-family: 'Roboto', sans-serif;
-    padding: 10px 15px 15px 15px;
-    width: 100%;
-}
-
 .header img {
     top: 500%;
     margin: 5px 0 0 0;
     height: 30px;
-    width: auto;
 }
 
 #back_img {
-    margin-left: 4px;
+    text-decoration: none;
 }
 
 #avatar {
@@ -91,14 +56,15 @@ body {
 }
 
 #menu_button {
-    float: right;
+    justify-content: flex-end;
     height: 25px;
     margin-top: 7px;
+    margin-left: auto;
 }
 
 #search_button {
     margin-top: 7px;
-    float: right;
+    justify-content: flex-end;
     margin-right: 5px;
     height: 25px;
 }
