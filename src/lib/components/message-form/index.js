@@ -13,6 +13,8 @@ const template = `
 	</form>
 `;
 
+const SUBMIT_EVENT = 'messageSumbit';
+
 class MessageForm extends HTMLElement {
         constructor () {
         super();
@@ -47,6 +49,13 @@ class MessageForm extends HTMLElement {
         this._elements.form.addEventListener('submit', this._onSubmit.bind(this));
         this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
         //this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
+        this.addEventListener(SUBMIT_EVENT, (e) => {
+            const args = e.detail;
+            console.log(args.messageContent);
+            const mes = this.createMessageDiv(args.messageContent.text, args.date, args.messageNumber, args.isOwn);
+            this._elements.message.appendChild(mes);
+            this.messageNumber++;
+        });
     }
 
     /**
@@ -89,10 +98,19 @@ class MessageForm extends HTMLElement {
         if (this.messageNumber % 2 === 0) {
             isOwn = true;
         }
-        var mes = this.createMessageDiv(messageContent, d, this.messageNumber, isOwn);
-        this._elements.message.appendChild(mes);
-        this.messageNumber++;
 
+        const submitEvent = new CustomEvent(SUBMIT_EVENT, {
+            detail: {
+                messageContent: {
+                    text: messageContent
+                },
+                date: new Date(),
+                messageNumber: this.messageNumber,
+                isOwn: isOwn
+            }
+        });
+
+        this.dispatchEvent(submitEvent);
 
 
         // alert(this._elements.form.value);
