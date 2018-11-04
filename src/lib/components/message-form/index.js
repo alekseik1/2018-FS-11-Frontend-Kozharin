@@ -8,6 +8,8 @@ const template = `
 	<form id="main_form" class="message_container">
 		<div class="result"></div>
 		<form-input class="messages_input" name="message_text" placeholder="Введите сообщение" slot="message-input">
+		    <button slot="icon" class="attachment_button" id="add_attachment"><img src="../../static/attachment.png" height="24dp"></button>
+		    <input type="file" class="attachment_picker">
 			<span slot="icon"><img src="../../static/ic_send_black_24dp.png"></span>
 		</form-input>
 	</form>
@@ -39,10 +41,21 @@ class MessageForm extends HTMLElement {
     _initElements () {
         var form = this.shadowRoot.querySelector('form');
         var message = this.shadowRoot.querySelector('.result');
+        const attachment_button = this.shadowRoot.querySelector('.attachment_button');
+        const attachment_picker = this.shadowRoot.querySelector('.attachment_picker');
         this._elements = {
             form: form,
-            message: message
+            message: message,
+            attachment_button: attachment_button,
+            attachment_picker: attachment_picker
         };
+    }
+
+    selectFile(e) {
+            console.log('Opening filepicker...');
+            console.log(this);
+            this._elements.attachment_picker.click(e);
+            e.preventDefault();
     }
 
     _addHandlers () {
@@ -56,6 +69,10 @@ class MessageForm extends HTMLElement {
             this._elements.message.appendChild(mes);
             this.messageNumber++;
         });
+
+        this.addEventListener("selectFile", this.selectFile);
+
+        this._elements.attachment_button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('selectFile')));
     }
 
     /**
@@ -86,8 +103,7 @@ class MessageForm extends HTMLElement {
     _onSubmit (event) {
         var input_text = Array.from(this._elements.form.elements).map(
             el => el.value
-        ).join(', ');
-        var d = new Date();
+        ); input_text = input_text[input_text.length-1];
         var messageContent = {};
 
 
