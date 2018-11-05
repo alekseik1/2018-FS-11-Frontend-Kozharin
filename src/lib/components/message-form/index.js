@@ -62,22 +62,41 @@ class MessageForm extends HTMLElement {
             var main_form = this.parentElement.parentElement;
             console.log(main_form);
             var files = this.files;
-            for(var file of files) {
+            for(var f of files) {
                 var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
-                var fileType = file['type'];
-                var messageDiv;
+                var fileType = f['type'];
                 if(ValidImageTypes.includes(fileType)) {
+
+                    var reader = new FileReader();
+
+                    // Closure to capture the file information.
+                    reader.onload = (function(theFile) {
+                        return function(e) {
+                            // Render thumbnail.
+                            console.log(e.target);
+                            var messageDiv = MessageForm.createMessageDiv({
+                                text: `Image; created at: ${(new Date(theFile.lastModified)).toLocaleDateString()}`,
+                                image: e.target.result
+                            }, new Date());
+                            var result_div = main_form.querySelector('.result');
+                            result_div.appendChild(messageDiv);
+                            //span.innerHTML = ['<img class="thumb" src="', e.target.result,
+                            //    '" title="', theFile.name, '"/>'].join('');
+                            //document.getElementById('list').insertBefore(span, null);
+                        };
+                    })(f);
+
+                    // Read in the image file as a data URL.
+                    reader.readAsDataURL(f);
+
+
                     // Это картинка!!
-                    MessageForm.saveImage(file);
-                    messageDiv = MessageForm.createMessageDiv({
-                       text: `Image; created at: ${(new Date(file.lastModified)).toLocaleDateString()}`,
-                       image: file
-                    }, new Date());
+                    //MessageForm.saveImage(file);
                 } else {
                     // Это не картинка
-                    messageDiv = MessageForm.createMessageDiv({
+                    var messageDiv = MessageForm.createMessageDiv({
                         text:
-                            `File: ${file.name}; createdAt: ${(new Date(file.lastModified)).toLocaleDateString()}`
+                            `File: ${f.name}; createdAt: ${(new Date(f.lastModified)).toLocaleDateString()}`
                     }, new Date());
                 }
                 var result_div = main_form.querySelector('.result');
@@ -130,7 +149,8 @@ class MessageForm extends HTMLElement {
         // Добавляем картинку, если она есть
         if (messageContent.hasOwnProperty('image')) {
             const imageElement = document.createElement('img');
-            imageElement.src = MessageForm.getImageSrc();
+            imageElement.src = messageContent.image;
+            imageElement.setAttribute('height', '40px');
             messageDiv.appendChild(imageElement);
         }
         messageDiv.insertAdjacentHTML('beforeend',
@@ -139,35 +159,6 @@ class MessageForm extends HTMLElement {
         return parentDiv;
     }
 
-    static getImageSrc() {
-        return `https://mipt.ru/css/images/eye.png`;
-    }
-
-    static saveImage(file) {
-        window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-
-        window.requestFileSystem(window.TEMPORARY, 1024*1024*20,
-            (fs) => {
-                fs.root.getFile('pic.png', {}, function(fileEntry) {
-
-                    // Get a File object representing the file,
-                    // then use FileReader to read its contents.
-                    fileEntry.file(function(file) {
-                        var reader = new FileReader();
-
-                        reader.onloadend = function(e) {
-                            var txtArea = document.createElement('textarea');
-                            txtArea.value = this.result;
-                            document.body.appendChild(txtArea);
-                        };
-
-                        reader.readAsText(file);
-                    }, errorHandler);
-
-                }, errorHandler);
-            },
-            () => alert('Пошел ты нахер, козел!'));
-    }
 
     _onSubmit (event) {
         var input_text = Array.from(this._elements.form.elements).map(
