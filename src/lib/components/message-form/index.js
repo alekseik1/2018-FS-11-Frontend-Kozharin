@@ -58,6 +58,24 @@ class MessageForm extends HTMLElement {
             e.preventDefault();
     }
 
+    fileIsUploaded(e) {
+            var main_form = this.parentElement.parentElement;
+            console.log(main_form);
+            var files = this.files;
+            for(var file of files) {
+                const messageDiv = MessageForm.createMessageDiv({text:
+                        `File: ${file.name}; createdAt: ${(new Date(file.lastModified)).toLocaleDateString()}`}, new Date());
+                var result_div = main_form.querySelector('.result');
+                result_div.appendChild(messageDiv);
+            }
+            e.preventDefault();
+    }
+
+    _addMessageDiv(messageDiv) {
+            this._elements.message.appendChild(messageDiv);
+            this.messageNumber++;
+    }
+
     _addHandlers () {
         this._elements.form.addEventListener('submit', this._onSubmit.bind(this));
         this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
@@ -65,14 +83,14 @@ class MessageForm extends HTMLElement {
         this.addEventListener(SUBMIT_EVENT, (e) => {
             const args = e.detail;
             console.log(args.messageContent);
-            const mes = this.createMessageDiv(args.messageContent.text, args.date, args.messageNumber, args.isOwn);
-            this._elements.message.appendChild(mes);
-            this.messageNumber++;
+            const mes = MessageForm.createMessageDiv(args.messageContent.text, args.date, args.messageNumber, args.isOwn);
+            this._addMessageDiv(mes);
         });
 
         this.addEventListener("selectFile", this.selectFile);
 
         this._elements.attachment_button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('selectFile')));
+        this._elements.attachment_picker.addEventListener('change', this.fileIsUploaded);
     }
 
     /**
@@ -82,7 +100,7 @@ class MessageForm extends HTMLElement {
      * @param messageNumber Порядковый номер сообщения
      * @returns {HTMLElement} Объект сообщения
      */
-    createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true) {
+    static createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true) {
         var parentDiv = document.createElement(`div`);
         if(isOwn)
             parentDiv.className = `messageBubbleOwn`;
@@ -109,6 +127,10 @@ class MessageForm extends HTMLElement {
 
 
         messageContent.text = input_text;
+        if (messageContent.text.length === 0) {
+            event.preventDefault();
+            return false;
+        }
         // Для дебага: четные свои, нечетные -- чужие
         var isOwn = false;
         if (this.messageNumber % 2 === 0) {
