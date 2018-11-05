@@ -145,12 +145,15 @@ class MessageForm extends HTMLElement {
             messageDiv.className = "own_messages";
         else
             messageDiv.className = "other_messages";
-        messageDiv.innerText = messageContent.text;
+        // Обернем текст в отдельный div
+        var textDiv = document.createElement('div');
+        textDiv.innerText = messageContent.text;
+        messageDiv.appendChild(textDiv);
         // Добавляем картинку, если она есть
         if (messageContent.hasOwnProperty('image')) {
             const imageElement = document.createElement('img');
             imageElement.src = messageContent.image;
-            imageElement.setAttribute('height', '40px');
+            imageElement.setAttribute('height', '100px');
             messageDiv.appendChild(imageElement);
         }
         messageDiv.insertAdjacentHTML('beforeend',
