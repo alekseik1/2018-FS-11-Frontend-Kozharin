@@ -119,6 +119,9 @@ class MessageForm extends HTMLElement {
             console.log(args.messageContent);
             const mes = MessageForm.createMessageDiv(args.messageContent.text, args.date, args.messageNumber, args.isOwn);
             this._addMessageDiv(mes);
+
+            var inputDiv = this._elements.form.querySelector('.messages_input').shadowRoot.querySelector('.main_input_form');
+            inputDiv.value = '';
         });
 
         this.addEventListener("selectFile", this.selectFile);
