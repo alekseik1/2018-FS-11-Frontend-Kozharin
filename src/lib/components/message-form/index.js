@@ -58,56 +58,77 @@ class MessageForm extends HTMLElement {
             e.preventDefault();
     }
 
-    fileIsUploaded(e) {
-            var main_form = this.parentElement.parentElement;
-            console.log(main_form);
-            var files = this.files;
-            for(var f of files) {
-                var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
-                var fileType = f['type'];
-                if(ValidImageTypes.includes(fileType)) {
+     static _handle_files_upload(files, main_form) {
 
-                    var reader = new FileReader();
+         main_form = main_form.shadowRoot;
+         var result_div = main_form.querySelector('.result');
+         console.log("MAIN FORM:");
+         console.log(main_form);
+         console.log('result_div: ');
+         console.log(result_div);
+        for(var f of files) {
+            var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+            var fileType = f['type'];
+            if(ValidImageTypes.includes(fileType)) {
 
-                    // Closure to capture the file information.
-                    reader.onload = (function(theFile) {
-                        return function(e) {
-                            // Render thumbnail.
-                            console.log(e.target);
-                            var messageDiv = MessageForm.createMessageDiv({
-                                text: `Image; created at: ${(new Date(theFile.lastModified)).toLocaleDateString()}`,
-                                image: e.target.result
-                            }, new Date());
-                            var result_div = main_form.querySelector('.result');
-                            result_div.appendChild(messageDiv);
-                            //span.innerHTML = ['<img class="thumb" src="', e.target.result,
-                            //    '" title="', theFile.name, '"/>'].join('');
-                            //document.getElementById('list').insertBefore(span, null);
-                        };
-                    })(f);
+                var reader = new FileReader();
 
-                    // Read in the image file as a data URL.
-                    reader.readAsDataURL(f);
+                // Closure to capture the file information.
+                reader.onload = (function(theFile) {
+                    return function(e) {
+                        // Render thumbnail.
+                        console.log(e.target);
+                        var messageDiv = MessageForm.createMessageDiv({
+                            text: `Image; created at: ${(new Date(theFile.lastModified)).toLocaleDateString()}`,
+                            image: e.target.result
+                        }, new Date());
+                        var result_div = main_form.querySelector('.result');
+                        result_div.appendChild(messageDiv);
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
 
 
-                    // Это картинка!!
-                    //MessageForm.saveImage(file);
-                } else {
-                    // Это не картинка
-                    var messageDiv = MessageForm.createMessageDiv({
-                        text:
-                            `File: ${f.name}; createdAt: ${(new Date(f.lastModified)).toLocaleDateString()}`
-                    }, new Date());
-                }
-                var result_div = main_form.querySelector('.result');
-                result_div.appendChild(messageDiv);
+                // Это картинка!!
+                //MessageForm.saveImage(file);
+            } else {
+                // Это не картинка
+                var messageDiv = MessageForm.createMessageDiv({
+                    text:
+                        `File: ${f.name}; createdAt: ${(new Date(f.lastModified)).toLocaleDateString()}`
+                }, new Date());
             }
+            result_div.appendChild(messageDiv);
+        }
+    }
+
+    fileIsUploaded(e) {
+            var files = this.files;
+            MessageForm._handle_files_upload(files, e.detail.context);
             e.preventDefault();
     }
 
     _addMessageDiv(messageDiv) {
             this._elements.message.appendChild(messageDiv);
             this.messageNumber++;
+    }
+
+
+
+    fileIsDropped(e) {
+            // КАК ТЕБЕ ТАКОЕ, ИЛОН МАСК?
+        var files = e.detail.old_e.dataTransfer.files;
+        var context = e.detail.context;
+        console.log("ALL e");
+        console.log(e);
+        console.log('Files: ');
+        console.log(files);
+
+            MessageForm._handle_files_upload(files, context);
+            e.preventDefault();
+            e.stopPropagation();
     }
 
     _addHandlers () {
@@ -128,6 +149,15 @@ class MessageForm extends HTMLElement {
 
         this._elements.attachment_button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('selectFile')));
         this._elements.attachment_picker.addEventListener('change', this.fileIsUploaded);
+        var context = this;
+        this.addEventListener('fileIsDropped', this.fileIsDropped);
+        this._elements.form.addEventListener('drop', (e) => {this.dispatchEvent(new CustomEvent('fileIsDropped', {
+            detail: {files: e.files, context: context, old_e: e}
+        })
+        );
+        e.preventDefault();
+        e.stopPropagation();
+        });
     }
 
     /**
