@@ -148,8 +148,19 @@ class MessageForm extends HTMLElement {
         this.addEventListener("selectFile", this.selectFile);
 
         this._elements.attachment_button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('selectFile')));
-        this._elements.attachment_picker.addEventListener('change', this.fileIsUploaded);
         var context = this;
+        this._elements.attachment_picker.addEventListener('change', (e) =>
+            {
+                this._elements.attachment_picker.dispatchEvent(new CustomEvent('fileIsUploaded', {
+                    detail: {
+                        files: e.files,
+                        context: context,
+                        old_e: e
+                    }
+            }));
+        });
+
+        this._elements.attachment_picker.addEventListener('fileIsUploaded', this.fileIsUploaded);
         this.addEventListener('fileIsDropped', this.fileIsDropped);
         this._elements.form.addEventListener('drop', (e) => {this.dispatchEvent(new CustomEvent('fileIsDropped', {
             detail: {files: e.files, context: context, old_e: e}
