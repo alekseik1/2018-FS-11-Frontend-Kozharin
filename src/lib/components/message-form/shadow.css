@@ -1,5 +1,9 @@
 form-input {
-	width: 100%;
+	/*width: 100%;*/
+}
+
+.attachment_button {
+	border: 0;
 }
 
 .sent_time {
@@ -9,9 +13,9 @@ form-input {
 }
 
 .result {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 }
 
 input[type=submit] {
@@ -19,50 +23,50 @@ input[type=submit] {
 }
 
 .attachment_picker {
-    opacity: 0;
+	opacity: 0;
 }
 
 .uploader_btn_wrapper {
-    border: 0;
-    background-color: whitesmoke;
+	border: 0;
+	background-color: whitesmoke;
 }
 
 .other_messages, .own_messages {
-    align-content: flex-start;
-    margin-top: 10px;
-    padding: 10px 15px 0 15px;
-    border: 1px solid #c1b6c3;
-    border-radius: 5px;
+	align-content: flex-start;
+	margin-top: 10px;
+	padding: 10px 15px 0 15px;
+	border: 1px solid #c1b6c3;
+	border-radius: 5px;
 }
 .other_messages {
-    background-color: greenyellow;
+	background-color: greenyellow;
 }
 
 .messageBubbleOther {
-    display: flex;
-    justify-content: flex-start;
+	display: flex;
+	justify-content: flex-start;
 }
 
 .messageBubbleOwn {
-    display: flex;
-    justify-content: flex-end;
+	display: flex;
+	justify-content: flex-end;
 }
 
 .own_messages {
-    background-color: #f3e5f5;
+	background-color: #f3e5f5;
 }
 
 .messages_container {
-    display: flex;
+	display: flex;
 
 }
 
 .messages_input {
-    display: flex;
-    border-radius: 8pt;
-    padding: 3pt 3pt 3pt 3pt;
+	display: flex;
+	border-radius: 8pt;
+	padding: 3pt 3pt 3pt 3pt;
 }
 
 #main_form {
-    margin: 3pt 3pt 3pt 3pt;
+	margin: 3pt 3pt 3pt 3pt;
 }
