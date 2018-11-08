@@ -18,6 +18,15 @@ input[type=submit] {
 	visibility: collapse;
 }
 
+.attachment_picker {
+    opacity: 0;
+}
+
+.uploader_btn_wrapper {
+    border: 0;
+    background-color: whitesmoke;
+}
+
 .other_messages, .own_messages {
     align-content: flex-start;
     margin-top: 10px;
