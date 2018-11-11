@@ -75,6 +75,14 @@ class MessageForm extends HTMLElement {
 
                 // Closure to capture the file information.
                 reader.onload = (function(theFile) {
+                    // Send file via Fetch API
+                    fetch('http://localhost:8081/message', {
+                        method: 'POST',
+                        body: {attach: theFile},
+                    }).then(
+                        response => response.json()
+                    ).then(success => console.log(success)
+                    ).catch(error => console.log(error));
                     return function(e) {
                         // Render thumbnail.
                         console.log(e.target);
