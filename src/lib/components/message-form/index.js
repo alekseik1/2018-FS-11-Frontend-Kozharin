@@ -15,13 +15,17 @@ const template = `
 	</form>
 `;
 
-const SUBMIT_EVENT = 'messageSumbit';
 
 class MessageForm extends HTMLElement {
-        constructor () {
+
+    constructor () {
         super();
         const shadowRoot = this.attachShadow({mode: 'open'});
+        this.SUBMIT_EVENT = 'messageSumbit';
         shadowRoot.innerHTML = template;
+        // TODO: Их надо брать с бэкенда
+        this.ownName = 'Алексей';
+        this.companionName = 'Котэ';
         this.messageNumber = 0;
         this._initElements();
         this._addHandlers();
@@ -51,13 +55,6 @@ class MessageForm extends HTMLElement {
         };
     }
 
-    selectFile(e) {
-            console.log('Opening filepicker...');
-            console.log(this);
-            this._elements.attachment_picker.click(e);
-            e.preventDefault();
-    }
-
      static _handle_files_upload(files, main_form) {
 
          main_form = main_form.shadowRoot;
@@ -78,7 +75,12 @@ class MessageForm extends HTMLElement {
                     // Send file via Fetch API
                     fetch('http://localhost:8081/message', {
                         method: 'POST',
-                        body: {attach: theFile},
+                        body: {
+                            attach: theFile,
+                            formData: {
+
+                            }
+                        },
                     }).then(
                         response => response.json()
                     ).then(success => console.log(success)
@@ -112,10 +114,10 @@ class MessageForm extends HTMLElement {
         }
     }
 
-    fileIsUploaded(e) {
-            var files = this.files;
-            MessageForm._handle_files_upload(files, e.detail.context);
-            e.preventDefault();
+    newFilesUploaded(files)
+    {
+        for(const file of files) this.submitEvent.detail.files.push(file);
+        MessageForm._handle_files_upload(files, this);
     }
 
     _addMessageDiv(messageDiv) {
@@ -140,42 +142,42 @@ class MessageForm extends HTMLElement {
     }
 
     _addHandlers () {
+        // Этот event будет передаваться от метода к методу и заполняться
+        // Потом он будет передан в _onSubmit и будет отправлено сообщение со всеми вложениями, текстом и т.п.
+        this.submitEvent = new CustomEvent(this.SUBMIT_EVENT, {
+            // NOTE: По такой форме надо делать event
+            detail: {
+                messageContent: {
+                    files: [],
+                    text: '',
+                },
+                number: 0,
+                isOwn: true,
+                time: new Date(),
+                author: 'Me',
+            }
+        });
         this._elements.form.addEventListener('submit', this._onSubmit.bind(this));
         this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
         //this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
-        this.addEventListener(SUBMIT_EVENT, (e) => {
-            const args = e.detail;
-            console.log(args.messageContent);
-            const mes = MessageForm.createMessageDiv(args.messageContent.text, args.date, args.messageNumber, args.isOwn);
-            this._addMessageDiv(mes);
 
-            var inputDiv = this._elements.form.querySelector('.messages_input').shadowRoot.querySelector('.main_input_form');
-            inputDiv.value = '';
-        });
+        // Клик по кнопке вызывает клик по picker
+        this._elements.attachment_button.addEventListener('click', (e) =>
+            this._elements.attachment_picker.click(e));
 
-        this.addEventListener("selectFile", this.selectFile);
-
-        this._elements.attachment_button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('selectFile')));
         var context = this;
-        this._elements.attachment_picker.addEventListener('change', (e) =>
-            {
-                this._elements.attachment_picker.dispatchEvent(new CustomEvent('fileIsUploaded', {
-                    detail: {
-                        files: e.files,
-                        context: context,
-                        old_e: e
-                    }
-            }));
-        });
+        this._elements.attachment_picker.addEventListener('change',
+                e => this.newFilesUploaded.bind(this)(e.path[0].files));
 
-        this._elements.attachment_picker.addEventListener('fileIsUploaded', this.fileIsUploaded);
+        this._elements.attachment_picker.addEventListener('newFilesUploaded', this.newFilesUploaded);
         this.addEventListener('fileIsDropped', this.fileIsDropped);
-        this._elements.form.addEventListener('drop', (e) => {this.dispatchEvent(new CustomEvent('fileIsDropped', {
-            detail: {files: e.files, context: context, old_e: e}
-        })
-        );
-        e.preventDefault();
-        e.stopPropagation();
+        this._elements.form.addEventListener('drop', (e) =>
+        {
+            this.dispatchEvent(new CustomEvent('fileIsDropped', {
+                detail: {files: e.files, context: context, old_e: e}
+            }));
+            e.preventDefault();
+            e.stopPropagation();
         });
     }
 
@@ -187,6 +189,7 @@ class MessageForm extends HTMLElement {
      * @returns {HTMLElement} Объект сообщения
      */
     static createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true) {
+        // TODO: сделать лучше поддержку thumbnail для картинок
         var parentDiv = document.createElement(`div`);
         if(isOwn)
             parentDiv.className = `messageBubbleOwn`;
@@ -214,17 +217,25 @@ class MessageForm extends HTMLElement {
         return parentDiv;
     }
 
-
+    /**
+     * Сабмит кнопки ввода сообщения. Тут должно обрабатываться все: наличие файлов, наличие текста, имя автора
+     * @param event Кастомный event "messageSent"
+     * @returns {boolean}
+     * @private
+     */
     _onSubmit (event) {
+        console.log('_onSubmit event is:');
+        console.log(event);
+        console.log('Custom submitEvent is:');
+        console.log(this.submitEvent);
+        // Заполним текст из submit-поля
         var input_text = Array.from(this._elements.form.elements).map(
             el => el.value
         ); input_text = input_text[input_text.length-1];
-        var messageContent = {};
-
-
-
-        messageContent.text = input_text;
-        if (messageContent.text.length === 0) {
+        this.submitEvent.detail.messageContent.text = input_text;
+        var messageContent = this.submitEvent.detail.messageContent;
+        // Выходим, если ничего не отправлено
+        if (messageContent.text.length === 0 && messageContent.files.length === 0) {
             event.preventDefault();
             return false;
         }
@@ -232,23 +243,23 @@ class MessageForm extends HTMLElement {
         var isOwn = false;
         if (this.messageNumber % 2 === 0) {
             isOwn = true;
+            this.submitEvent.detail.author = this.ownName;
+        } else {
+            isOwn = false;
+            this.submitEvent.detail.author = this.companionName;
         }
+        // Добавляем информацию о сообщении
+        this.submitEvent.detail.number = this.messageNumber;
+        this.submitEvent.detail.isOwn = isOwn;
+        this.submitEvent.detail.time = new Date();
+        this.submitEvent.detail.author = this.ownName;
 
-        const submitEvent = new CustomEvent(SUBMIT_EVENT, {
-            detail: {
-                messageContent: {
-                    text: messageContent
-                },
-                date: new Date(),
-                messageNumber: this.messageNumber,
-                isOwn: isOwn
-            }
-        });
+        // Отправим сообщение
+        const messageDiv = MessageForm.createMessageDiv(
+            this.submitEvent.detail.messageContent, this.submitEvent.detail.time,
+            this.submitEvent.detail.number, this.submitEvent.detail.isOwn);
+        this._addMessageDiv(messageDiv);
 
-        this.dispatchEvent(submitEvent);
-
-
-        // alert(this._elements.form.value);
         this._elements.form.value = "";
         event.preventDefault();
         return false;
