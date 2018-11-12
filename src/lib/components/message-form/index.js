@@ -93,8 +93,10 @@ class MessageForm extends HTMLElement {
         //this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
 
         // Клик по кнопке вызывает клик по picker
-        this._elements.attachment_button.addEventListener('click', (e) =>
-            this._elements.attachment_picker.click(e));
+        this._elements.attachment_button.addEventListener('click', (e) => {
+            this._elements.attachment_picker.click(e);
+            e.preventDefault();
+        });
 
         this._elements.attachment_picker.addEventListener('change',
                 e => this.newFilesUploaded.bind(this)(e.path[0].files));
