@@ -47,11 +47,15 @@ class MessageForm extends HTMLElement {
         var message = this.shadowRoot.querySelector('.result');
         const attachment_button = this.shadowRoot.querySelector('.attachment_button');
         const attachment_picker = this.shadowRoot.querySelector('.attachment_picker');
+        // В .messages_input есть shadowRoot, а там уже форма ввода сообщения
+        const message_input = this.shadowRoot.querySelector('.messages_input')
+            .shadowRoot.querySelector('.main_input_form');
         this._elements = {
             form: form,
             messages_container: message,
             attachment_button: attachment_button,
-            attachment_picker: attachment_picker
+            attachment_picker: attachment_picker,
+            message_input: message_input,
         };
     }
 
@@ -247,7 +251,7 @@ class MessageForm extends HTMLElement {
         // Очистим submitEvent
         this._initSubmitEvent();
 
-        this._elements.form.value = "";
+        this._elements.message_input.value = "";
         event.preventDefault();
         return false;
     }
