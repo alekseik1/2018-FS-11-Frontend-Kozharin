@@ -49,7 +49,7 @@ class MessageForm extends HTMLElement {
         const attachment_picker = this.shadowRoot.querySelector('.attachment_picker');
         this._elements = {
             form: form,
-            message: message,
+            messages_container: message,
             attachment_button: attachment_button,
             attachment_picker: attachment_picker
         };
@@ -73,7 +73,7 @@ class MessageForm extends HTMLElement {
                 // Closure to capture the file information.
                 reader.onload = (function(theFile) {
                     // Send file via Fetch API
-                    fetch('http://localhost:8081/message', {
+                    fetch('http://localhost:8081/messages_container', {
                         method: 'POST',
                         body: {
                             attach: theFile,
@@ -121,7 +121,7 @@ class MessageForm extends HTMLElement {
     }
 
     _addMessageDiv(messageDiv) {
-            this._elements.message.appendChild(messageDiv);
+            this._elements.messages_container.appendChild(messageDiv);
             this.messageNumber++;
     }
 
