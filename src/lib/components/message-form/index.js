@@ -125,22 +125,6 @@ class MessageForm extends HTMLElement {
             this.messageNumber++;
     }
 
-
-
-    fileIsDropped(e) {
-            // КАК ТЕБЕ ТАКОЕ, ИЛОН МАСК?
-        var files = e.detail.old_e.dataTransfer.files;
-        var context = e.detail.context;
-        console.log("ALL e");
-        console.log(e);
-        console.log('Files: ');
-        console.log(files);
-
-            MessageForm._handle_files_upload(files, context);
-            e.preventDefault();
-            e.stopPropagation();
-    }
-
     _initSubmitEvent() {
         // Этот event будет передаваться от метода к методу и заполняться
         // Потом он будет передан в _onSubmit и будет отправлено сообщение со всеми вложениями, текстом и т.п.
@@ -169,11 +153,9 @@ class MessageForm extends HTMLElement {
         this._elements.attachment_button.addEventListener('click', (e) =>
             this._elements.attachment_picker.click(e));
 
-        var context = this;
         this._elements.attachment_picker.addEventListener('change',
                 e => this.newFilesUploaded.bind(this)(e.path[0].files));
 
-        this.addEventListener('fileIsDropped', this.fileIsDropped);
         this._elements.form.addEventListener('drop', (e) =>
         {
             this.newFilesUploaded(e.dataTransfer.files);
