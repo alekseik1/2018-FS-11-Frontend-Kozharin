@@ -147,7 +147,6 @@ class MessageForm extends HTMLElement {
                 let reader = new FileReader();
                 // Closure to capture the file information.
                 reader.onload = (function(theFile) {
-                    MessageForm._sendFileToServer(theFile);
                     return (e) => {
                         // Render thumbnail.
                         console.log(e.target);
@@ -172,19 +171,24 @@ class MessageForm extends HTMLElement {
 
         // Кидаем окошко сообщения в отдельный div (это нужно для красоты)
         parentDiv.appendChild(messageDiv);
+
+        // Напоследок: отправим полное сообщение на сервер
+        MessageForm._sendMessageToServer(messageContent, author, date);
         return parentDiv;
     }
 
-    static _sendFileToServer(file) {
+    static _sendMessageToServer(messageContent, author, date) {
+        // TODO: сделать отправку файла на сервер
         // Send file via Fetch API
+        const formData = new FormData();
+        formData.append('attach', new Blob(messageContent.files));
+        formData.append('author', author);
+        formData.append('date', date);
+        formData.append('text', messageContent.text);
+        console.log('`FormData` is: ');
         fetch('http://localhost:8081/message', {
             method: 'POST',
-            body: {
-                attach: file,
-                formData: {
-
-                }
-            },
+            body: formData,
         }).then(
             response => response.json()
         ).then(success => console.log(success)
