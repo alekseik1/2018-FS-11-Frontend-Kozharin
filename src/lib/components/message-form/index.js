@@ -58,70 +58,9 @@ class MessageForm extends HTMLElement {
             message_input: message_input,
         };
     }
-
-     static _handle_files_upload(files, main_form) {
-
-         main_form = main_form.shadowRoot;
-         var result_div = main_form.querySelector('.result');
-         console.log("MAIN FORM:");
-         console.log(main_form);
-         console.log('result_div: ');
-         console.log(result_div);
-        for(var f of files) {
-            var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
-            var fileType = f['type'];
-            if(ValidImageTypes.includes(fileType)) {
-
-                var reader = new FileReader();
-
-                // Closure to capture the file information.
-                reader.onload = (function(theFile) {
-                    // Send file via Fetch API
-                    fetch('http://localhost:8081/messages_container', {
-                        method: 'POST',
-                        body: {
-                            attach: theFile,
-                            formData: {
-
-                            }
-                        },
-                    }).then(
-                        response => response.json()
-                    ).then(success => console.log(success)
-                    ).catch(error => console.log(error));
-                    return function(e) {
-                        // Render thumbnail.
-                        console.log(e.target);
-                        var messageDiv = MessageForm.createMessageDiv({
-                            text: `Image; created at: ${(new Date(theFile.lastModified)).toLocaleDateString()}`,
-                            image: e.target.result
-                        }, new Date());
-                        var result_div = main_form.querySelector('.result');
-                        result_div.appendChild(messageDiv);
-                    };
-                })(f);
-
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(f);
-
-
-                // Это картинка!!
-                //MessageForm.saveImage(file);
-            } else {
-                // Это не картинка
-                var messageDiv = MessageForm.createMessageDiv({
-                    text:
-                        `File: ${f.name}; createdAt: ${(new Date(f.lastModified)).toLocaleDateString()}`
-                }, new Date());
-            }
-            result_div.appendChild(messageDiv);
-        }
-    }
-
     newFilesUploaded(files)
     {
         for(const file of files) this.submitEvent.detail.messageContent.files.push(file);
-        // MessageForm._handle_files_upload(files, this);
     }
 
     _addMessageDiv(messageDiv) {
@@ -175,9 +114,11 @@ class MessageForm extends HTMLElement {
      * @param messageContent Содержимое, ДОЛЖНО иметь поле .text
      * @param date Объект Date
      * @param messageNumber Порядковый номер сообщения
+     * @param isOwn Свое ли сообщение
+     * @param author Имя автора
      * @returns {HTMLElement} Объект сообщения
      */
-    static createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true) {
+    createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true, author = 'Me') {
         // TODO: сделать лучше поддержку thumbnail для картинок
         var parentDiv = document.createElement(`div`);
         if(isOwn)
@@ -189,21 +130,63 @@ class MessageForm extends HTMLElement {
             messageDiv.className = "own_messages";
         else
             messageDiv.className = "other_messages";
+
         // Обернем текст в отдельный div
         var textDiv = document.createElement('div');
         textDiv.innerText = messageContent.text;
         messageDiv.appendChild(textDiv);
+
         // Добавляем картинку, если она есть
-        if (messageContent.hasOwnProperty('image')) {
-            const imageElement = document.createElement('img');
-            imageElement.src = messageContent.image;
-            imageElement.setAttribute('height', '100px');
-            messageDiv.appendChild(imageElement);
+        for(let f of messageContent.files) {
+            const ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+            const fileType = f['type'];
+            // Если картинка, добавим preview
+            if(ValidImageTypes.includes(fileType)) {
+                let reader = new FileReader();
+                // Closure to capture the file information.
+                reader.onload = (function(theFile) {
+                    MessageForm._sendFileToServer(theFile);
+                    return (e) => {
+                        // Render thumbnail.
+                        console.log(e.target);
+                        const imageElement = document.createElement('img');
+                        imageElement.src = e.target.result;
+                        imageElement.setAttribute('height', '100px');
+                        messageDiv.appendChild(imageElement);
+                    };
+                })(f);
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            } else {
+                // Это не картинка
+                textDiv.innerText += `\n File: ${f.name}; createdAt: 
+                    ${(new Date(f.lastModified)).toLocaleDateString()}`;
+            }
         }
+
+        // Добавим дату отправления сообщения
         messageDiv.insertAdjacentHTML('beforeend',
             `<div class="sent_time"> ${date.getHours()}:${date.getMinutes()}</div>`);
+
+        // Кидаем окошко сообщения в отдельный div (это нужно для красоты)
         parentDiv.appendChild(messageDiv);
         return parentDiv;
+    }
+
+    static _sendFileToServer(file) {
+        // Send file via Fetch API
+        fetch('http://localhost:8081/message', {
+            method: 'POST',
+            body: {
+                attach: file,
+                formData: {
+
+                }
+            },
+        }).then(
+            response => response.json()
+        ).then(success => console.log(success)
+        ).catch(error => console.log(error));
     }
 
     /**
@@ -244,9 +227,9 @@ class MessageForm extends HTMLElement {
         this.submitEvent.detail.author = this.ownName;
 
         // Отправим сообщение
-        const messageDiv = MessageForm.createMessageDiv(
+        const messageDiv = this.createMessageDiv(
             this.submitEvent.detail.messageContent, this.submitEvent.detail.time,
-            this.submitEvent.detail.number, this.submitEvent.detail.isOwn);
+            this.submitEvent.detail.number, this.submitEvent.detail.isOwn, this.submitEvent.detail.author);
         this._addMessageDiv(messageDiv);
         // Очистим submitEvent
         this._initSubmitEvent();
