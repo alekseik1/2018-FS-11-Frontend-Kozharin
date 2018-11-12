@@ -262,6 +262,8 @@ class MessageForm extends HTMLElement {
             this.submitEvent.detail.messageContent, this.submitEvent.detail.time,
             this.submitEvent.detail.number, this.submitEvent.detail.isOwn);
         this._addMessageDiv(messageDiv);
+        // Очистим submitEvent
+        this._initSubmitEvent();
 
         this._elements.form.value = "";
         event.preventDefault();
