@@ -15,13 +15,17 @@ const template = `
 	</form>
 `;
 
-const SUBMIT_EVENT = 'messageSumbit';
 
 class MessageForm extends HTMLElement {
-        constructor () {
+
+    constructor () {
         super();
         const shadowRoot = this.attachShadow({mode: 'open'});
+        this.SUBMIT_EVENT = 'messageSumbit';
         shadowRoot.innerHTML = template;
+        // TODO: Их надо брать с бэкенда
+        this.ownName = 'Алексей';
+        this.companionName = 'Котэ';
         this.messageNumber = 0;
         this._initElements();
         this._addHandlers();
@@ -43,131 +47,67 @@ class MessageForm extends HTMLElement {
         var message = this.shadowRoot.querySelector('.result');
         const attachment_button = this.shadowRoot.querySelector('.attachment_button');
         const attachment_picker = this.shadowRoot.querySelector('.attachment_picker');
+        // В .messages_input есть shadowRoot, а там уже форма ввода сообщения
+        const message_input = this.shadowRoot.querySelector('.messages_input')
+            .shadowRoot.querySelector('.main_input_form');
         this._elements = {
             form: form,
-            message: message,
+            messages_container: message,
             attachment_button: attachment_button,
-            attachment_picker: attachment_picker
+            attachment_picker: attachment_picker,
+            message_input: message_input,
         };
     }
-
-    selectFile(e) {
-            console.log('Opening filepicker...');
-            console.log(this);
-            this._elements.attachment_picker.click(e);
-            e.preventDefault();
-    }
-
-     static _handle_files_upload(files, main_form) {
-
-         main_form = main_form.shadowRoot;
-         var result_div = main_form.querySelector('.result');
-         console.log("MAIN FORM:");
-         console.log(main_form);
-         console.log('result_div: ');
-         console.log(result_div);
-        for(var f of files) {
-            var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
-            var fileType = f['type'];
-            if(ValidImageTypes.includes(fileType)) {
-
-                var reader = new FileReader();
-
-                // Closure to capture the file information.
-                reader.onload = (function(theFile) {
-                    return function(e) {
-                        // Render thumbnail.
-                        console.log(e.target);
-                        var messageDiv = MessageForm.createMessageDiv({
-                            text: `Image; created at: ${(new Date(theFile.lastModified)).toLocaleDateString()}`,
-                            image: e.target.result
-                        }, new Date());
-                        var result_div = main_form.querySelector('.result');
-                        result_div.appendChild(messageDiv);
-                    };
-                })(f);
-
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(f);
-
-
-                // Это картинка!!
-                //MessageForm.saveImage(file);
-            } else {
-                // Это не картинка
-                var messageDiv = MessageForm.createMessageDiv({
-                    text:
-                        `File: ${f.name}; createdAt: ${(new Date(f.lastModified)).toLocaleDateString()}`
-                }, new Date());
-            }
-            result_div.appendChild(messageDiv);
-        }
-    }
-
-    fileIsUploaded(e) {
-            var files = this.files;
-            MessageForm._handle_files_upload(files, e.detail.context);
-            e.preventDefault();
+    newFilesUploaded(files)
+    {
+        for(const file of files) this.submitEvent.detail.messageContent.files.push(file);
     }
 
     _addMessageDiv(messageDiv) {
-            this._elements.message.appendChild(messageDiv);
+            this._elements.messages_container.appendChild(messageDiv);
             this.messageNumber++;
     }
 
-
-
-    fileIsDropped(e) {
-            // КАК ТЕБЕ ТАКОЕ, ИЛОН МАСК?
-        var files = e.detail.old_e.dataTransfer.files;
-        var context = e.detail.context;
-        console.log("ALL e");
-        console.log(e);
-        console.log('Files: ');
-        console.log(files);
-
-            MessageForm._handle_files_upload(files, context);
-            e.preventDefault();
-            e.stopPropagation();
+    _initSubmitEvent() {
+        // Этот event будет передаваться от метода к методу и заполняться
+        // Потом он будет передан в _onSubmit и будет отправлено сообщение со всеми вложениями, текстом и т.п.
+        this.submitEvent = new CustomEvent(this.SUBMIT_EVENT, {
+            // NOTE: По такой форме надо делать event
+            detail: {
+                messageContent: {
+                    files: [],
+                    text: '',
+                },
+                number: 0,
+                isOwn: true,
+                time: new Date(),
+                author: 'Me',
+            }
+        });
     }
 
     _addHandlers () {
+        this._initSubmitEvent();
         this._elements.form.addEventListener('submit', this._onSubmit.bind(this));
         this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
         //this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
-        this.addEventListener(SUBMIT_EVENT, (e) => {
-            const args = e.detail;
-            console.log(args.messageContent);
-            const mes = MessageForm.createMessageDiv(args.messageContent.text, args.date, args.messageNumber, args.isOwn);
-            this._addMessageDiv(mes);
 
-            var inputDiv = this._elements.form.querySelector('.messages_input').shadowRoot.querySelector('.main_input_form');
-            inputDiv.value = '';
+        // Клик по кнопке вызывает клик по picker
+        this._elements.attachment_button.addEventListener('click', (e) => {
+            this._elements.attachment_picker.click(e);
+            e.preventDefault();
         });
 
-        this.addEventListener("selectFile", this.selectFile);
+        this._elements.attachment_picker.addEventListener('change',
+                e => this.newFilesUploaded.bind(this)(e.path[0].files));
 
-        this._elements.attachment_button.addEventListener('click', () => this.dispatchEvent(new CustomEvent('selectFile')));
-        var context = this;
-        this._elements.attachment_picker.addEventListener('change', (e) =>
-            {
-                this._elements.attachment_picker.dispatchEvent(new CustomEvent('fileIsUploaded', {
-                    detail: {
-                        files: e.files,
-                        context: context,
-                        old_e: e
-                    }
-            }));
-        });
-
-        this._elements.attachment_picker.addEventListener('fileIsUploaded', this.fileIsUploaded);
-        this.addEventListener('fileIsDropped', this.fileIsDropped);
-        this._elements.form.addEventListener('drop', (e) => {this.dispatchEvent(new CustomEvent('fileIsDropped', {
-            detail: {files: e.files, context: context, old_e: e}
-        })
-        );
-        e.preventDefault();
-        e.stopPropagation();
+        this._elements.form.addEventListener('drop', (e) =>
+        {
+            this.newFilesUploaded(e.dataTransfer.files);
+            console.log('`submitEvent` files changed:');
+            console.log(this.submitEvent.detail.messageContent);
+            e.preventDefault();
+            e.stopPropagation();
         });
     }
 
@@ -176,9 +116,12 @@ class MessageForm extends HTMLElement {
      * @param messageContent Содержимое, ДОЛЖНО иметь поле .text
      * @param date Объект Date
      * @param messageNumber Порядковый номер сообщения
+     * @param isOwn Свое ли сообщение
+     * @param author Имя автора
      * @returns {HTMLElement} Объект сообщения
      */
-    static createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true) {
+    createMessageDiv(messageContent, date, messageNumber = 0, isOwn = true, author = 'Me') {
+        // TODO: сделать лучше поддержку thumbnail для картинок
         var parentDiv = document.createElement(`div`);
         if(isOwn)
             parentDiv.className = `messageBubbleOwn`;
@@ -189,34 +132,88 @@ class MessageForm extends HTMLElement {
             messageDiv.className = "own_messages";
         else
             messageDiv.className = "other_messages";
+
         // Обернем текст в отдельный div
         var textDiv = document.createElement('div');
         textDiv.innerText = messageContent.text;
         messageDiv.appendChild(textDiv);
+
         // Добавляем картинку, если она есть
-        if (messageContent.hasOwnProperty('image')) {
-            const imageElement = document.createElement('img');
-            imageElement.src = messageContent.image;
-            imageElement.setAttribute('height', '100px');
-            messageDiv.appendChild(imageElement);
+        for(let f of messageContent.files) {
+            const ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+            const fileType = f['type'];
+            // Если картинка, добавим preview
+            if(ValidImageTypes.includes(fileType)) {
+                let reader = new FileReader();
+                // Closure to capture the file information.
+                reader.onload = (function(theFile) {
+                    return (e) => {
+                        // Render thumbnail.
+                        console.log(e.target);
+                        const imageElement = document.createElement('img');
+                        imageElement.src = e.target.result;
+                        imageElement.setAttribute('height', '100px');
+                        messageDiv.appendChild(imageElement);
+                    };
+                })(f);
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            } else {
+                // Это не картинка
+                textDiv.innerText += `\n File: ${f.name}; createdAt: 
+                    ${(new Date(f.lastModified)).toLocaleDateString()}`;
+            }
         }
+
+        // Добавим дату отправления сообщения
         messageDiv.insertAdjacentHTML('beforeend',
             `<div class="sent_time"> ${date.getHours()}:${date.getMinutes()}</div>`);
+
+        // Кидаем окошко сообщения в отдельный div (это нужно для красоты)
         parentDiv.appendChild(messageDiv);
+
+        // Напоследок: отправим полное сообщение на сервер
+        MessageForm._sendMessageToServer(messageContent, author, date);
         return parentDiv;
     }
 
+    static _sendMessageToServer(messageContent, author, date) {
+        // TODO: сделать отправку файла на сервер
+        // Send file via Fetch API
+        const formData = new FormData();
+        formData.append('attach', new Blob(messageContent.files));
+        formData.append('author', author);
+        formData.append('date', date);
+        formData.append('text', messageContent.text);
+        console.log('`FormData` is: ');
+        fetch('http://localhost:8081/message', {
+            method: 'POST',
+            body: formData,
+        }).then(
+            response => response.json()
+        ).then(success => console.log(success)
+        ).catch(error => console.log(error));
+    }
 
+    /**
+     * Сабмит кнопки ввода сообщения. Тут должно обрабатываться все: наличие файлов, наличие текста, имя автора
+     * @param event Кастомный event "messageSent"
+     * @returns {boolean}
+     * @private
+     */
     _onSubmit (event) {
+        console.log('_onSubmit event is:');
+        console.log(event);
+        console.log('Custom submitEvent is:');
+        console.log(this.submitEvent);
+        // Заполним текст из submit-поля
         var input_text = Array.from(this._elements.form.elements).map(
             el => el.value
         ); input_text = input_text[input_text.length-1];
-        var messageContent = {};
-
-
-
-        messageContent.text = input_text;
-        if (messageContent.text.length === 0) {
+        this.submitEvent.detail.messageContent.text = input_text;
+        var messageContent = this.submitEvent.detail.messageContent;
+        // Выходим, если ничего не отправлено
+        if (messageContent.text.length === 0 && messageContent.files.length === 0) {
             event.preventDefault();
             return false;
         }
@@ -224,24 +221,26 @@ class MessageForm extends HTMLElement {
         var isOwn = false;
         if (this.messageNumber % 2 === 0) {
             isOwn = true;
+            this.submitEvent.detail.author = this.ownName;
+        } else {
+            isOwn = false;
+            this.submitEvent.detail.author = this.companionName;
         }
+        // Добавляем информацию о сообщении
+        this.submitEvent.detail.number = this.messageNumber;
+        this.submitEvent.detail.isOwn = isOwn;
+        this.submitEvent.detail.time = new Date();
+        this.submitEvent.detail.author = this.ownName;
 
-        const submitEvent = new CustomEvent(SUBMIT_EVENT, {
-            detail: {
-                messageContent: {
-                    text: messageContent
-                },
-                date: new Date(),
-                messageNumber: this.messageNumber,
-                isOwn: isOwn
-            }
-        });
+        // Отправим сообщение
+        const messageDiv = this.createMessageDiv(
+            this.submitEvent.detail.messageContent, this.submitEvent.detail.time,
+            this.submitEvent.detail.number, this.submitEvent.detail.isOwn, this.submitEvent.detail.author);
+        this._addMessageDiv(messageDiv);
+        // Очистим submitEvent
+        this._initSubmitEvent();
 
-        this.dispatchEvent(submitEvent);
-
-
-        // alert(this._elements.form.value);
-        this._elements.form.value = "";
+        this._elements.message_input.value = "";
         event.preventDefault();
         return false;
     }
