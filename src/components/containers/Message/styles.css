@@ -1,0 +1,21 @@
+:local(.MessageText) {
+    background: #2b81af;
+}
+
+:local(.Message) {
+    display: flex;
+    flex-direction: column;
+}
+:local(.time_and_status) {
+    display: flex;
+    flex-direction: row;
+    opacity: 50%;
+}
+
+:local(.time) {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+:local(.status) {
+
+}
