@@ -1,10 +1,10 @@
 import React from 'react';
-import './styles.css'
+import styles from './styles.css';
 
 class TextInput extends React.Component {
 
     render() {
-        return <input />;
+        return <input className={styles.TextInput} />;
     }
 }
 
