@@ -1,0 +1,18 @@
+:local(.FileInput) {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    background: #f3e5f5;
+}
+
+:local(.placeholder::before) {
+    content: 'File';
+    display: inline-block;
+}
+
+:local(.placeholder) {
+    background: #f3e5f5;
+}

@@ -1,11 +1,14 @@
 import React from 'react';
-import './styles.css';
+import styles from './styles.css';
+
 
 class FileInput extends React.Component {
 
     render() {
         return (
-            <input type='file' />
+            <div className={styles.placeholder}>
+                <input type='file' className={styles.FileInput} />
+            </div>
         );
     }
 }
