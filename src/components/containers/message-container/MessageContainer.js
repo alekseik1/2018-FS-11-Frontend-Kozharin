@@ -9,8 +9,10 @@ class MessageContainer extends React.Component {
             <div className={styles.MessageContainer}>
                 {this.props.messages.map((element, index) => {
                     return <Message
+                        isMine={index % 2 === 0}
                         text={element.text}
                         time={element.time}
+                        key={index}
                         isRead={element.isRead}/>;
                 })}
             </div>

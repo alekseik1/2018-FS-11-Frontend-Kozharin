@@ -6,14 +6,29 @@ import MessageContainer from './components/containers/message-container/MessageC
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {messages: [
-        {
-            text: 'СЛОЖНА',
-            time: new Date().toLocaleDateString(),
-            isRead: true,
-            files: []
-        }
-    ]};
+    this._fill_debug_messages();
+  }
+
+  _fill_debug_messages() {
+      this.state = {messages: [
+              {
+                  text: 'СЛОЖНА',
+                  time: new Date().toLocaleDateString(),
+                  isRead: true,
+                  files: []
+              }
+          ]};
+      let mes = [];
+      for(let i=0; i<100; i++) {
+          this.state.messages.push(
+              {
+                  text: 'СЛОЖНА',
+                  time: new Date().toLocaleDateString(),
+                  isRead: true,
+                  files: []
+              }
+          );
+      }
   }
 
   render() {

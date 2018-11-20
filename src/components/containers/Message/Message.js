@@ -4,7 +4,9 @@ import styles from './styles.css';
 class Message extends React.Component {
     render() {
         return (
-            <div className={styles.Message}>
+            <div className={this.props.isMine ?
+                styles.my_messages :
+                styles.other_messages}>
 
                 <div className={styles.MessageText}>
                     {this.props.text}
