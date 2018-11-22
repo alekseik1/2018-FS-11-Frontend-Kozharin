@@ -21,6 +21,8 @@ class Input extends React.Component {
             files: this.state.files,
         };
         this.state.submitListener(message);
+        // Очищаем файлы
+        this.setState({files: []});
     }
 
     _onFilesSubmit(files) {
