@@ -9,6 +9,7 @@ class Input extends React.Component {
         super(props);
         this.state = {
             submitListener: props.onSubmit,
+            files: [],
         };
     }
 
@@ -17,16 +18,20 @@ class Input extends React.Component {
         let message = {
             text: newText,
             time: new Date().toLocaleDateString(),
-            files: [],
+            files: this.state.files,
         };
         this.state.submitListener(message);
+    }
+
+    _onFilesSubmit(files) {
+        this.setState({files: files});
     }
 
     render() {
         return (
             <div className={styles.Input}>
                 <TextInput submitListener={this._onTextSubmit.bind(this)} />
-                <FileInput />
+                <FileInput submitListener={this._onFilesSubmit.bind(this)}/>
                 <GeoInput />
             </div>
         );
