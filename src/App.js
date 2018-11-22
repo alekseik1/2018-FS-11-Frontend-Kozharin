@@ -26,11 +26,22 @@ class App extends Component {
       this.setState({messages: mes});
   }
 
+  _onMessageSubmit(message) {
+      let mes = this.state.messages.slice();
+      mes.push({
+          text: message.text,
+          time: message.time,
+          isRead: false,
+          files: message.files,
+      });
+      this.setState({messages: mes});
+  }
+
   render() {
     return (
       <div className={styles.react_container}>
           <MessageContainer messages={this.state.messages}/>
-          <Input />
+          <Input onSubmit={this._onMessageSubmit.bind(this)} />
       </div>
     );
   }
