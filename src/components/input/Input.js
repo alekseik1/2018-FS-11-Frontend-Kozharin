@@ -20,9 +20,12 @@ class Input extends React.Component {
             time: new Date().toLocaleDateString(),
             files: this.state.files,
         };
-        this.state.submitListener(message);
-        // Очищаем файлы
-        this.setState({files: []});
+        // Если есть текст сообщения, либо хотя бы один аттач, то отправим
+        if(newText.length !== 0 || this.state.files.length !== 0) {
+            this.state.submitListener(message);
+            // Очищаем файлы
+            this.setState({files: []});
+        }
     }
 
     _onFilesSubmit(files) {
