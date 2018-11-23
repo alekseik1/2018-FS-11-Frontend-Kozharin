@@ -17,11 +17,21 @@ class FileInput extends React.Component {
         this.state.submitListener(files);
     }
 
+    _handleClick(e) {
+        this.uploadInput.click();
+        e.preventDefault();
+    }
 
     render() {
         return (
             <div className={styles.placeholder}>
-                <input type='file' className={styles.FileInput} onChange={this._onChange.bind(this)} />
+                <button className={styles.FileButton} onClick={this._handleClick.bind(this)} />
+                <input
+                    type='file'
+                    ref={(ref) => this.uploadInput = ref}
+                    className={styles.FileInput}
+                    onChange={this._onChange.bind(this)}
+                />
             </div>
         );
     }
