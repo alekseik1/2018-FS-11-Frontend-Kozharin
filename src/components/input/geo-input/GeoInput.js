@@ -1,10 +1,10 @@
 import React from 'react';
-import './styles.css';
+import styles from './styles.css';
 
 class GeoInput extends React.Component {
 
     render() {
-        return <button>Geo</button>;
+        return <button className={styles.GeoButton} />;
     }
 }
 
