@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import styles from './App.css';
 import Input from './components/input/Input';
 import MessageContainer from './components/containers/message-container/MessageContainer';
@@ -6,7 +7,7 @@ import MessageContainer from './components/containers/message-container/MessageC
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {messages: []};
+    this.state = {messages: [], shouldScrollDown: true};
   }
 
   componentDidMount() {
@@ -20,7 +21,8 @@ class App extends Component {
               text: 'СЛОЖНА',
               time: new Date().toLocaleDateString(),
               isRead: true,
-              files: []
+              files: [],
+              isOwn: (i % 2 === 0)
           });
       }
       this.setState({messages: mes});
@@ -33,14 +35,18 @@ class App extends Component {
           time: message.time,
           isRead: false,
           files: message.files,
+          isOwn: true
       });
-      this.setState({messages: mes});
+      this.setState({messages: mes, shouldScrollDown: true});
   }
 
   render() {
     return (
       <div className={styles.react_container}>
-          <MessageContainer messages={this.state.messages}/>
+          <MessageContainer
+              messages={this.state.messages}
+              shouldScrollDown={this.state.shouldScrollDown}
+          />
           <Input onSubmit={this._onMessageSubmit.bind(this)} />
       </div>
     );
