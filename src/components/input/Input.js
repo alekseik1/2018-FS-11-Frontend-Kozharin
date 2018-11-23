@@ -10,6 +10,12 @@ class Input extends React.Component {
         this.state = {
             submitListener: props.onSubmit,
             files: [],
+            geo: {
+                coords: {
+                    latitude: null,
+                    longitude: null
+                }
+            },
         };
     }
 
@@ -19,6 +25,7 @@ class Input extends React.Component {
             text: newText,
             time: new Date().toLocaleDateString(),
             files: this.state.files,
+            geo: this.state.geo,
         };
         // Если есть текст сообщения, либо хотя бы один аттач, то отправим
         if(newText.length !== 0 || this.state.files.length !== 0) {
@@ -32,12 +39,16 @@ class Input extends React.Component {
         this.setState({files: files});
     }
 
+    _onGeoSubmit(position) {
+        this.setState({geo: position});
+    }
+
     render() {
         return (
             <div className={styles.Input}>
                 <TextInput submitListener={this._onTextSubmit.bind(this)} />
                 <FileInput submitListener={this._onFilesSubmit.bind(this)}/>
-                <GeoInput />
+                <GeoInput submitListener={this._onGeoSubmit.bind(this)} />
             </div>
         );
 
