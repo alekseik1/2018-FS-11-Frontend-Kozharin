@@ -1,5 +1,6 @@
 :local(.TextInput) {
     border: 0;
+    padding: 16px 0 16px 16px;
     outline: none;
     font-size: 16px;
     flex-grow: 1;

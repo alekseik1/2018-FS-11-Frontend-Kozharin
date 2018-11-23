@@ -32,6 +32,7 @@ class TextInput extends React.Component {
             onChange={this._onChange.bind(this)}
             onKeyPress={this._onKeypress.bind(this)}
             value={this.state.currText}
+            placeholder={'Введите сообщение...'}
         />;
         return inputForm
     }
