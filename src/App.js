@@ -8,6 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {messages: [], shouldScrollDown: true};
+    this.serverURL = 'http://localhost:8081/message';
   }
 
   componentDidMount() {
@@ -37,8 +38,30 @@ class App extends Component {
           files: message.files,
           isOwn: true
       });
+      this._sendMessage({
+          text: message.text,
+          time: message.time,
+          // TODO: определять автора сообщений
+          author: 'Me',
+          attach: message.files.length === 0 ? [] : message.files[0],
+      });
       this.setState({messages: mes, shouldScrollDown: true});
   }
+
+    _sendMessage (message) {
+      console.log(message);
+      message.sending = fetch(this.serverURL, {
+          method: 'POST',
+          body: Object.keys(message).reduce((formData, key) => {
+              if (message[key]) formData.append(key, message[key]);
+                return formData;
+              }, new FormData)
+      }).then(
+          response => response.json()
+      ).then(
+          success => console.log(success)
+      );
+    }
 
   render() {
     return (
