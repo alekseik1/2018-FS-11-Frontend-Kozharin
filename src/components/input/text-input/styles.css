@@ -1,0 +1,7 @@
+:local(.TextInput) {
+    border: 0;
+    padding-left: 8px;
+    outline: none;
+    font-size: 16px;
+    flex-grow: 1;
+}

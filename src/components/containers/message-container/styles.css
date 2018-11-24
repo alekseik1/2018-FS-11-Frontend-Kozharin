@@ -1,0 +1,17 @@
+:local(.MessageContainer) {
+    display: flex;
+    flex-direction: column;
+    background: #f0f0f0;
+    flex-flow: column;
+    align-items: flex-start;
+    /* BUG: flex при использовании justify-content: flex-end
+     ломает скроллинг. Решение: засунуть в еще один контейнер! */
+    justify-content: flex-end;
+    overflow-y: auto;
+    min-height: 100%;
+}
+
+:local(.InnerScroll) {
+    height: 100%;
+    overflow: auto;
+}
