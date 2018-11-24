@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {messages: [], shouldScrollDown: true};
-    this.serverURL = 'http://localhost:8081/message';
+    this.serverURL = 'http://localhost:5000/api/';
   }
 
   componentDidMount() {
@@ -50,14 +50,34 @@ class App extends Component {
 
     _sendMessage (message) {
       console.log(message);
+      console.log(JSON.stringify({
+          // todo: поменять на нормальные chat_id и user_id
+          'chat_id': 4,
+          'user_id': 0,
+          'content': message.text,
+          'added_at': message.time,
+      }));
       message.sending = fetch(this.serverURL, {
           method: 'POST',
-          body: Object.keys(message).reduce((formData, key) => {
-              if (message[key]) formData.append(key, message[key]);
-                return formData;
-              }, new FormData)
+          headers: {
+              'Access-Control-Allow-Origin': '*',
+          },
+          // TODO: разобраться с CORS и поставить нормальную политику
+          mode: 'no-cors',
+          body: {
+              'jsonrpc': '2.0',
+              'method': 'send_message',
+              'id': '1',
+              'params': JSON.stringify({
+                  // todo: поменять на нормальные chat_id и user_id
+                  'chat_id': 4,
+                  'user_id': 0,
+                  'content': message.text,
+                  'added_at': message.time,
+              }),
+          }
       }).then(
-          response => response.json()
+          response => {console.log(response); response.json()}
       ).then(
           success => console.log(success)
       );
