@@ -36,7 +36,7 @@ class App extends Component {
           this.setState({messages: success.result.slice().reverse()
                   .map((value, index) => {
                   // TODO: на беке сделать вид объекта Message такой же, как на фронте
-                  return {isOwn: true, text: value.content, time: value.added_at, isRead: false}
+                  return {isOwn: true, text: value.content, time: new Date(value.added_at).toLocaleString(), isRead: false}
               })});
       }).catch(err => console.log(err));
   }
