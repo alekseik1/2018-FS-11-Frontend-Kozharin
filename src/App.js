@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {messages: [], shouldScrollDown: true};
-    this.serverURL = 'http://localhost:5000/api/';
+    this.serverURL = '/api/';
   }
 
   componentDidMount() {
@@ -20,7 +20,7 @@ class App extends Component {
       for(let i=0; i<100; i++) {
           mes.push({
               text: 'СЛОЖНА',
-              time: new Date().toLocaleDateString(),
+              time: new Date().toLocaleString(),
               isRead: true,
               files: [],
               isOwn: (i % 2 === 0)
@@ -33,7 +33,7 @@ class App extends Component {
       let mes = this.state.messages.slice();
       mes.push({
           text: message.text,
-          time: message.time,
+          time: new Date(message.time).toLocaleString(),
           isRead: false,
           files: message.files,
           isOwn: true
@@ -64,18 +64,18 @@ class App extends Component {
           },
           // TODO: разобраться с CORS и поставить нормальную политику
           mode: 'no-cors',
-          body: {
+          body: JSON.stringify({
               'jsonrpc': '2.0',
               'method': 'send_message',
               'id': '1',
-              'params': JSON.stringify({
+              'params': {
                   // todo: поменять на нормальные chat_id и user_id
                   'chat_id': 4,
                   'user_id': 0,
                   'content': message.text,
                   'added_at': message.time,
-              }),
-          }
+              },
+          }),
       }).then(
           response => {console.log(response); response.json()}
       ).then(

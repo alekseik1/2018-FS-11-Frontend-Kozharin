@@ -23,7 +23,7 @@ class Input extends React.Component {
         // Вот здесь мы должны собрать текст сообщения + аттачи. А потом отправить их выше!
         let message = {
             text: newText,
-            time: new Date().toLocaleDateString(),
+            time: new Date().toISOString(),
             files: this.state.files,
             geo: this.state.geo,
         };
