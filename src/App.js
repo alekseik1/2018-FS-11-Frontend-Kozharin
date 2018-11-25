@@ -12,21 +12,33 @@ class App extends Component {
   }
 
   componentDidMount() {
-      this._fill_debug_messages();
+      // Подргужаем сообщения с бекенда
+      // TODO: прикрутить сюда авторизацию
+      this._load_messages();
   }
 
-  _fill_debug_messages() {
-      let mes = [];
-      for(let i=0; i<100; i++) {
-          mes.push({
-              text: 'СЛОЖНА',
-              time: new Date().toLocaleString(),
-              isRead: true,
-              files: [],
-              isOwn: (i % 2 === 0)
-          });
-      }
-      this.setState({messages: mes});
+  _load_messages() {
+      let messages = [];
+      fetch(this.serverURL, {
+          method: 'POST',
+          body: JSON.stringify({
+              'jsonrpc': '2.0',
+              'id': '2',
+              'method': 'get_messages_by_chat',
+              'params': {
+                  'chat_id': 4,
+                  'from_id': 0
+              }
+          })
+      }).then(response => response.json()
+      ).then(success => {
+          console.log(success.result);
+          this.setState({messages: success.result.slice().reverse()
+                  .map((value, index) => {
+                  // TODO: на беке сделать вид объекта Message такой же, как на фронте
+                  return {isOwn: true, text: value.content, time: value.added_at, isRead: false}
+              })});
+      }).catch(err => console.log(err));
   }
 
   _onMessageSubmit(message) {
