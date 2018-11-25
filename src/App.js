@@ -8,32 +8,44 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {messages: [], shouldScrollDown: true};
-    this.serverURL = 'http://localhost:8081/message';
+    this.serverURL = '/api/';
   }
 
   componentDidMount() {
-      this._fill_debug_messages();
+      // Подргужаем сообщения с бекенда
+      // TODO: прикрутить сюда авторизацию
+      this._load_messages();
   }
 
-  _fill_debug_messages() {
-      let mes = [];
-      for(let i=0; i<100; i++) {
-          mes.push({
-              text: 'СЛОЖНА',
-              time: new Date().toLocaleDateString(),
-              isRead: true,
-              files: [],
-              isOwn: (i % 2 === 0)
-          });
-      }
-      this.setState({messages: mes});
+  _load_messages() {
+      let messages = [];
+      fetch(this.serverURL, {
+          method: 'POST',
+          body: JSON.stringify({
+              'jsonrpc': '2.0',
+              'id': '2',
+              'method': 'get_messages_by_chat',
+              'params': {
+                  'chat_id': 4,
+                  'from_id': 0
+              }
+          })
+      }).then(response => response.json()
+      ).then(success => {
+          console.log(success.result);
+          this.setState({messages: success.result.slice().reverse()
+                  .map((value, index) => {
+                  // TODO: на беке сделать вид объекта Message такой же, как на фронте
+                  return {isOwn: true, text: value.content, time: new Date(value.added_at).toLocaleString(), isRead: false}
+              })});
+      }).catch(err => console.log(err));
   }
 
   _onMessageSubmit(message) {
       let mes = this.state.messages.slice();
       mes.push({
           text: message.text,
-          time: message.time,
+          time: new Date(message.time).toLocaleString(),
           isRead: false,
           files: message.files,
           isOwn: true
@@ -50,14 +62,34 @@ class App extends Component {
 
     _sendMessage (message) {
       console.log(message);
+      console.log(JSON.stringify({
+          // todo: поменять на нормальные chat_id и user_id
+          'chat_id': 4,
+          'user_id': 0,
+          'content': message.text,
+          'added_at': message.time,
+      }));
       message.sending = fetch(this.serverURL, {
           method: 'POST',
-          body: Object.keys(message).reduce((formData, key) => {
-              if (message[key]) formData.append(key, message[key]);
-                return formData;
-              }, new FormData)
+          headers: {
+              'Access-Control-Allow-Origin': '*',
+          },
+          // TODO: разобраться с CORS и поставить нормальную политику
+          mode: 'no-cors',
+          body: JSON.stringify({
+              'jsonrpc': '2.0',
+              'method': 'send_message',
+              'id': '1',
+              'params': {
+                  // todo: поменять на нормальные chat_id и user_id
+                  'chat_id': 4,
+                  'user_id': 0,
+                  'content': message.text,
+                  'added_at': message.time,
+              },
+          }),
       }).then(
-          response => response.json()
+          response => {console.log(response); response.json()}
       ).then(
           success => console.log(success)
       );
