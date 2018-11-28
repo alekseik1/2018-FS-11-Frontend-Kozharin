@@ -27,7 +27,8 @@ class App extends Component {
               'method': 'get_messages_by_chat',
               'params': {
                   'chat_id': 4,
-                  'from_id': 0
+                  'from_id': 0,
+                  'limit': 10e7,
               }
           })
       }).then(response => response.json()
