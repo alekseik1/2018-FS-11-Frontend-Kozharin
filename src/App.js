@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Dialog from "./components/ui-pages/Dialog";
 import {BrowserRouter, Route, Link, Switch} from 'react-router-dom';
-import Input from "./components/input/Input";
+import Auth from "./components/ui-pages/Auth/index"
 import DialogsList from "./components/ui-pages/DialogsList/index";
 
 class App extends Component {
@@ -38,7 +38,7 @@ class App extends Component {
     return (
         <BrowserRouter>
             <Switch>
-                <Route exact path='/' component={Input} />
+                <Route exact path='/' component={Auth} />
                 <Route exact path='/dialogs' render={(props) => {
                     return (
                         <DialogsList
