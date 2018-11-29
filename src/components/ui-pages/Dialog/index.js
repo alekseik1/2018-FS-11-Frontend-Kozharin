@@ -3,6 +3,7 @@ import styles from './styles.css';
 import Input from '../../input/Input';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
+import {getChatMessages} from '../../../utils/backend-utils/index';
 
 class Dialog extends Component {
     constructor(props) {
@@ -14,32 +15,7 @@ class Dialog extends Component {
     componentDidMount() {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
-        this._load_messages();
-    }
-
-    _load_messages() {
-        let messages = [];
-        fetch(this.serverURL, {
-            method: 'POST',
-            body: JSON.stringify({
-                'jsonrpc': '2.0',
-                'id': '2',
-                'method': 'get_messages_by_chat',
-                'params': {
-                    'chat_id': 4,
-                    'from_id': 0,
-                    'limit': 10e7,
-                }
-            })
-        }).then(response => response.json()
-        ).then(success => {
-            console.log(success.result);
-            this.setState({messages: success.result.slice().reverse()
-                    .map((value, index) => {
-                        // TODO: на беке сделать вид объекта Message такой же, как на фронте
-                        return {isOwn: true, text: value.content, time: new Date(value.added_at).toLocaleString(), isRead: false}
-                    })});
-        }).catch(err => console.log(err));
+        getChatMessages(4, 0, 10e5).then((result) => this.setState({messages: result}));
     }
 
     _onMessageSubmit(message) {
