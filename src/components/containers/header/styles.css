@@ -24,4 +24,25 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
+
+    margin-left: 24px;
+}
+
+:local(.person_info_container) {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2ch;
+}
+
+:local(.full_name) {
+    display: flex;
+    margin-top: 0;
+    color: #f0f0f0;
+}
+
+:local(.last_online) {
+    display: flex;
+    justify-content: center;
+    color: #c9c9c9;
+    font-size: 80%;
 }

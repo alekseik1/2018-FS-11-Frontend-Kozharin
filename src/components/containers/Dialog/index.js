@@ -96,10 +96,22 @@ class Dialog extends Component {
         );
     }
 
+    /**
+     * Вернуть, когда собеседник был последний раз онлайн
+     */
+    getLastOnline() {
+        return 'Был в сети недавно';
+    }
+
     render() {
         return (
             <div className={styles.react_container}>
-                <Header prevLink={this.props.prevLink}/>
+                <Header
+                    prevLink={this.props.prevLink}
+                    fullName={this.props.fullName}
+                    avatarURL={this.props.avatarURL}
+                    lastOnline={this.getLastOnline()}
+                />
                 <MessageContainer
                     messages={this.state.messages}
                     shouldScrollDown={this.state.shouldScrollDown}

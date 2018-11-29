@@ -10,7 +10,13 @@ class App extends Component {
         <BrowserRouter>
             <Switch>
                 <Route exact path='/' component={Input} />
-                <Route path='/im' render={(props) => <Dialog {...props} prevLink={'/'} />}/>
+                <Route path='/im' render={(props) =>
+                    <Dialog {...props}
+                            prevLink={'/'}
+                            fullName={"Мистер Кот"}
+                            avatarURL={'https://cs7.pikabu.ru/post_img/2018/05/25/5/1527229519156826952.jpg'}
+                    />}
+                />
             </Switch>
         </BrowserRouter>
     );

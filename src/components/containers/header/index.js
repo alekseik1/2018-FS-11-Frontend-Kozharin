@@ -13,12 +13,21 @@ class Header extends React.Component {
     render() {
         if (this.state.goBack) {
             console.log(this.state);
-            return <Redirect to='/'/>;
+            return <Redirect to={this.props.prevLink}/>;
         }
         return (
             <div className={styles.dialog_header}>
-                <button className={styles.back_button} onClick={() => this.setState({goBack: true})} />
-                <img className={styles.avatar_img} src={'https://cs7.pikabu.ru/post_img/2018/05/25/5/1527229519156826952.jpg'} />
+
+                <button
+                    className={styles.back_button}
+                    onClick={() => this.setState({goBack: true})}
+                />
+
+                <img className={styles.avatar_img} src={this.props.avatarURL} />
+                <div className={styles.person_info_container}>
+                    <div className={styles.full_name}>{this.props.fullName}</div>
+                    <div className={styles.last_online}>{this.props.lastOnline}</div>
+                </div>
             </div>
         );
     }
