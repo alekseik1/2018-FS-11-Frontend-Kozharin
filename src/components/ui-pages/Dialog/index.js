@@ -38,7 +38,7 @@ class Dialog extends Component {
             isOwn: true
         });
 
-        sendChatMessage(this.DEBUG_CHAT_ID, this.DEBUG_USER_ID, message.text).then( () => {
+        sendChatMessage(this.props.chatID, this.props.userID, message.text).then( () => {
             this.setState({messages: mes, shouldScrollDown: true});
         });
     }
