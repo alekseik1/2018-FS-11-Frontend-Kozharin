@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Dialog from "./components/containers/Dialog";
+import Dialog from "./components/ui-pages/Dialog";
 import {BrowserRouter, Route, Link, Switch} from 'react-router-dom';
 import Input from "./components/input/Input";
+import ListDialogs from "./components/ui-pages/DialogsList/index";
 
 class App extends Component {
 
@@ -10,6 +11,7 @@ class App extends Component {
         <BrowserRouter>
             <Switch>
                 <Route exact path='/' component={Input} />
+                <Route exact path='/dialogs' component={ListDialogs} />
                 <Route path='/im' render={(props) =>
                     <Dialog {...props}
                             prevLink={'/'}

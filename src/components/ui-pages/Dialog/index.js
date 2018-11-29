@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import styles from './styles.css';
 import Input from '../../input/Input';
-import MessageContainer from '../message-container/MessageContainer';
-import Header from '../header/index';
+import MessageContainer from '../../containers/message-container/MessageContainer';
+import Header from '../../containers/header';
 
 class Dialog extends Component {
     constructor(props) {
