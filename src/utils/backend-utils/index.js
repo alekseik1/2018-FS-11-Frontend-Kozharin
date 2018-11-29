@@ -29,6 +29,10 @@ function getChatMessages(chatId, userID, limit) {
     ).then(success => {
         console.log('Success in getChatMessages: ');
         console.log(success);
+        if (success.length === 0) {
+            // Если не пришло сообщений, возвращаем пустой список
+            return [];
+        }
         return success.result
             .slice()
             // С бека они приходят в обратном порядке (особенность SQL)
@@ -36,4 +40,21 @@ function getChatMessages(chatId, userID, limit) {
     }).catch(err => console.log(err));
 }
 
-export {getChatMessages, getDialogs};
+// TODO: передавать файлы в сообщении
+function sendChatMessage(chatId, senderID, messageText) {
+    return fetch(BACKEND_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            'jsonrpc': '2.0',
+            'id': '3',
+            'method': 'send_message',
+            'params': {
+                'chat_id': chatId,
+                'user_id': senderID,
+                'text': messageText,
+            }
+        })
+    });
+}
+
+export {getChatMessages, getDialogs, sendChatMessage};

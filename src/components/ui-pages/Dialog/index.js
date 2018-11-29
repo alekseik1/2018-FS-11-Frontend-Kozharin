@@ -3,19 +3,29 @@ import styles from './styles.css';
 import Input from '../../input/Input';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
-import {getChatMessages} from '../../../utils/backend-utils/index';
+import {getChatMessages, sendChatMessage} from '../../../utils/backend-utils/index';
 
 class Dialog extends Component {
+
     constructor(props) {
         super(props);
         this.state = {messages: [], shouldScrollDown: true};
         this.serverURL = '/api/';
+        this.DEBUG_CHAT_ID = 4;
+        this.DEBUG_USER_ID = 0;
+        this.DEBUG_LIMIT = 10e5;
     }
 
     componentDidMount() {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
-        getChatMessages(4, 0, 10e5).then((result) => this.setState({messages: result}));
+        console.log(this.DEBUG_USER_ID);
+        getChatMessages(this.DEBUG_CHAT_ID, this.DEBUG_USER_ID, this.DEBUG_LIMIT)
+            .then((result) => {
+                console.log('getChatMessages: ');
+                console.log(result);
+                this.setState({messages: result})
+            });
     }
 
     _onMessageSubmit(message) {
@@ -27,49 +37,10 @@ class Dialog extends Component {
             files: message.files,
             isOwn: true
         });
-        this._sendMessage({
-            text: message.text,
-            time: message.time,
-            // TODO: определять автора сообщений
-            author: 'Me',
-            attach: message.files.length === 0 ? [] : message.files[0],
-        });
-        this.setState({messages: mes, shouldScrollDown: true});
-    }
 
-    _sendMessage (message) {
-        console.log(message);
-        console.log(JSON.stringify({
-            // todo: поменять на нормальные chat_id и user_id
-            'chat_id': 4,
-            'user_id': 0,
-            'content': message.text,
-            'added_at': message.time,
-        }));
-        message.sending = fetch(this.serverURL, {
-            method: 'POST',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-            },
-            // TODO: разобраться с CORS и поставить нормальную политику
-            mode: 'no-cors',
-            body: JSON.stringify({
-                'jsonrpc': '2.0',
-                'method': 'send_message',
-                'id': '1',
-                'params': {
-                    // todo: поменять на нормальные chat_id и user_id
-                    'chat_id': 4,
-                    'user_id': 0,
-                    'content': message.text,
-                    'added_at': message.time,
-                },
-            }),
-        }).then(
-            response => {console.log(response); response.json()}
-        ).then(
-            success => console.log(success)
-        );
+        sendChatMessage(this.DEBUG_CHAT_ID, this.DEBUG_USER_ID, message.text).then( () => {
+            this.setState({messages: mes, shouldScrollDown: true});
+        });
     }
 
     /**
