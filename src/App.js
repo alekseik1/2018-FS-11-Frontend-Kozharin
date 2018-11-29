@@ -53,7 +53,7 @@ class App extends Component {
                         />
                     );
                 }} />
-                <Route path='/im' render={(props) =>
+                <Route exact path='/im' render={(props) =>
                     <Dialog {...props}
                             prevLink={'/dialogs'}
                             // TODO: брать эти значения с бека
