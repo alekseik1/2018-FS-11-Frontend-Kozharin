@@ -20,7 +20,7 @@ class Dialog extends Component {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
         console.log(this.DEBUG_USER_ID);
-        getChatMessages(this.DEBUG_CHAT_ID, this.DEBUG_USER_ID, this.DEBUG_LIMIT)
+        getChatMessages(this.props.chatID, this.props.userID, this.DEBUG_LIMIT)
             .then((result) => {
                 console.log('getChatMessages: ');
                 console.log(result);

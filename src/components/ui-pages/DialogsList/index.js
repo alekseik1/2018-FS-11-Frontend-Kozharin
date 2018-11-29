@@ -12,8 +12,9 @@ class DialogsList extends React.Component {
         };
     }
 
-    openDialog(userID) {
-        this.setState({dialogToOpen: userID});
+    openDialog(chatID, chatName) {
+        this.setState({dialogToOpen: chatID});
+        this.props.onDialogSelectListener(chatID, chatName);
     }
 
     render() {
@@ -21,7 +22,6 @@ class DialogsList extends React.Component {
             // TODO: редиректить на диалог с конкретным пользователем
             return <Redirect to='/im' />;
         }
-        console.log(this.state.dialogs);
         return (
             <div className={styles.dialogs_list}>
                 {this.state.dialogs.map( (item, pos) => {
@@ -29,8 +29,8 @@ class DialogsList extends React.Component {
                     avatarURL={item.avatarURL}
                     fullName={item.fullName}
                     lastMessagePreview={item.lastMessagePreview}
-                    userID={item.userID}
-                    clickCallback={() => this.openDialog.bind(this)}
+                    chatID={item.chatID}
+                    clickCallback={this.openDialog.bind(this)}
                     key={pos}
                 />
             })}

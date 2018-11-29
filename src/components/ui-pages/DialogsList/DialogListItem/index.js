@@ -5,7 +5,10 @@ class DialogListItem extends React.Component{
 
     render() {
         return (
-            <div className={styles.container} onClick={this.props.clickCallback(this.props.userID)}>
+            <div className={styles.container} onClick={() => {
+                console.log('clicked!');
+                this.props.clickCallback(this.props.chatID, this.props.fullName);
+            }}>
                 <img
                     src={this.props.avatarURL}
                     className={styles.avatar}
