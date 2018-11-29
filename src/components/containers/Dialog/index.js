@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './styles.css';
 import Input from '../../input/Input';
 import MessageContainer from '../message-container/MessageContainer';
+import Header from '../header/index';
 
 class Dialog extends Component {
     constructor(props) {
@@ -98,6 +99,7 @@ class Dialog extends Component {
     render() {
         return (
             <div className={styles.react_container}>
+                <Header prevLink={this.props.prevLink}/>
                 <MessageContainer
                     messages={this.state.messages}
                     shouldScrollDown={this.state.shouldScrollDown}

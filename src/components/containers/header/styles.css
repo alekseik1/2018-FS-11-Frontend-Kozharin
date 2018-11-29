@@ -1,0 +1,27 @@
+:local(.dialog_header) {
+    display: flex;
+    flex-direction: row;
+    background-color: #8e24aa;
+    min-height: 36px;
+}
+
+:local(.back_button) {
+    width: 36px;
+    height: auto;
+    margin: -6px 5px -6px -6px;
+
+    background-image: url("https://img.icons8.com/dotty/50/000000/back.png");
+    background-size: 80% 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #8e24aa;
+
+    border: 0;
+    outline: none;
+}
+
+:local(.avatar_img) {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
