@@ -1,0 +1,30 @@
+:local(.container) {
+    display: flex;
+    height: 80px;
+    border: #c9c9c9 solid 2px;
+    background-color: aliceblue;
+    margin-bottom: 1px;
+}
+
+:local(.avatar) {
+    display: flex;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 80px;
+    padding: 4px 10px;
+}
+
+:local(.dialog_description) {
+    display: flex;
+    flex-direction: column;
+}
+
+:local(.full_name) {
+    display: flex;
+    font-weight: bold;
+}
+
+:local(.last_message_preview) {
+    display: flex;
+}

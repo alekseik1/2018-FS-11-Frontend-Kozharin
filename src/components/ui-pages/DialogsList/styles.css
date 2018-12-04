@@ -1,0 +1,6 @@
+:local(.dialogs_list) {
+    display: flex;
+    flex-direction: column;
+    background-color: #8e24aa;
+    min-height: 100vh;
+}

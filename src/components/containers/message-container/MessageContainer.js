@@ -4,6 +4,12 @@ import styles from './styles.css';
 import Message from "../Message/Message";
 
 class MessageContainer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            messages: [],
+        }
+    }
 
     _scrollDown() {
         // TODO: возможно, постоянный поиск элемента сделает приложение менее производительным
