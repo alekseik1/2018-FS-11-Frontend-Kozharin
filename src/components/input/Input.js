@@ -32,6 +32,7 @@ class Input extends React.Component {
             this.state.submitListener(message);
             // Очищаем файлы
             this.setState({files: []});
+            this.setState({geo: {}});
         }
     }
 
