@@ -1,8 +1,9 @@
-export const SEND_MESSAGE = (receiver, text, attachment) => ({
+export const SEND_MESSAGE = (receiver, text, attachment, geo) => ({
     type: 'SEND_MESSAGE',
     text,
     receiver,
     attachment,
+    geo
 });
 
 export const LOAD_CHATS = (userID) => ({
