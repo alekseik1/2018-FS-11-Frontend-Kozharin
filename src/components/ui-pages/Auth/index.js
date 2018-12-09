@@ -1,15 +1,25 @@
 import React from 'react';
 import {Redirect} from "react-router-dom";
-import styles from './styles.css'
+import { dispatch } from 'react-redux'
+import { connect } from 'react-redux';
+import styles from './styles.css';
+import { userAuthorized } from "../../../actions";
 
-class Auth extends React.Component {
+const DEBUG_USER_ID = 0;
 
-    render() {
-        return (
-            // TODO: проверять авторизацию здесь
-            <Redirect to='/dialogs' />
-        );
-    }
-}
+const Auth = ({ onAuthCallback }) => {
+    onAuthCallback();
+    return (
+        <Redirect to='/dialogs' />
+    )
+};
 
-export default Auth;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => ({
+    onAuthCallback: () => dispatch(userAuthorized(
+        DEBUG_USER_ID
+    )),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
