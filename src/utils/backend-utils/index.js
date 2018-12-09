@@ -1,5 +1,5 @@
 // TODO: поменять на реальный сервер в продакшне
-const BACKEND_URL = '/api/';
+const BACKEND_URL = 'http://localhost:5000/api/';
 
 /**
  * Загружает диалоги пользователя
