@@ -48,17 +48,20 @@ export const geoSubmitted = (geo, chatID) => ({
 export const USER_AUTHORIZED = 'USER_AUTHORIZED';
 export function userAuthorized(userID, token) {
     return function(dispatch) {
-        getUserInfo(userID).then( userData =>
+        getUserInfo(userID).then( userData => {
+            userData = userData.result[0];
             dispatch(updateUserData(
                 // TODO: здесь я пишу ключи с бекенда
-                {userID: userData.user_id,
+                {
+                    userID: userData.user_id,
                     userName: userData.name,
                     userNick: userData.nick,
                     avatarURL: userData.avatar,
                     token: token,
                 }
-            ))
-        )
+                )
+            );
+        });
     }
 }
 
