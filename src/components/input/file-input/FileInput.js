@@ -7,7 +7,7 @@ const FileInput = ({ currentFiles = [], onSuccess, onSubmit }) => {
         <div className={ styles.placeholder }>
             <button
                 className={ styles.FileButton }
-                onClick={ uploadInput.click() }
+                onClick={ uploadInput ? uploadInput.click() : null }
             />
             <input
                 type='file'
