@@ -61,7 +61,7 @@ function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', 
                   action) {
     switch (action.type) {
         case UPDATE_USER_DATA:
-            return action.userData
+            return action.userData;
         default:
             return state;
     }
