@@ -1,33 +1,46 @@
 import { combineReducers } from "redux";
 import {
     FILES_SUBMITTED, GEO_SUBMITTED,
-    TEXT_SUBMITTED
+    TEXT_SUBMITTED, USER_AUTHORIZED
 } from '../actions/index';
 
-function unfinishedMessages(state, action) {
+function unfinishedMessages(state =
+                                {0: {chatID: 0, text: '', geo: {}, files: []}}
+                                , action) {
     switch(action.type) {
         case TEXT_SUBMITTED:
-            return state.map((message) => {
+            /* Пример массива:
+             {2:
+                {chatID: 2, text: 'asd', geo: {}, files: []},
+              3:
+                {chatID: 3, text: 'asd', geo: {}, files: []},
+             }
+             */
+            return state.keys().map((key) => {
                 // Для данного чата
-                if (message.chatID === action.chatID) {
+                if (key === action.chatID) {
                     // Записываем текущий текст
-                    return {...message, text: action.text};
+                    return {[key]: {...state[key], text: action.text}};
                 }
-                return message;
+                return {[key]: state[key]};
             });
         case FILES_SUBMITTED:
-            return state.map((message) => {
-                if (message.chatID === action.chatID) {
-                    return {...message, files: action.files}
+            return state.keys().map((key) => {
+                // Для данного чата
+                if (key === action.chatID) {
+                    // Записываем текущий текст
+                    return {[key]: {...state[key], files: action.files}};
                 }
-                return message;
+                return {[key]: state[key]};
             });
         case GEO_SUBMITTED:
-            return state.map((message) => {
-                if (message.chatID === action.chatID) {
-                    return {...message, geo: action.geo}
+            return state.keys().map((key) => {
+                // Для данного чата
+                if (key === action.chatID) {
+                    // Записываем текущий текст
+                    return {[key]: {...state[key], geo: action.geo}};
                 }
-                return message;
+                return {[key]: state[key]};
             });
         default:
             return state;
