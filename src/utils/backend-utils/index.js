@@ -9,6 +9,20 @@ function getDialogs(userID) {
     fetch()
 }
 
+function getUserInfo(userID) {
+    return fetch(BACKEND_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            'jsonrpc': '2.0',
+            'id': '10',
+            'method': 'get_user_info',
+            'params': {
+                'user_id': userID,
+            }
+        }),
+    }).then(response => response.json());
+}
+
 
 function getChatMessages(chatId, userID, limit) {
     console.log('getChatMessages!');
@@ -57,4 +71,4 @@ function sendChatMessage(chatId, senderID, messageText) {
     });
 }
 
-export {getChatMessages, getDialogs, sendChatMessage};
+export {getChatMessages, getDialogs, sendChatMessage, getUserInfo};

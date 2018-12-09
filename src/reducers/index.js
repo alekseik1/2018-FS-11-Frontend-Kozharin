@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import {
     FILES_SUBMITTED, GEO_SUBMITTED,
-    TEXT_SUBMITTED, USER_AUTHORIZED
+    TEXT_SUBMITTED, UPDATE_USER_DATA, USER_AUTHORIZED
 } from '../actions/index';
 
 function unfinishedMessages(state =
@@ -57,7 +57,18 @@ function authData(state={userID: 1, token: ''}, action) {
     }
 }
 
+function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', avatarURL: '', token: ''},
+                  action) {
+    switch (action.type) {
+        case UPDATE_USER_DATA:
+            return action.userData
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     unfinishedMessages,
     authData,
+    userData,
 });

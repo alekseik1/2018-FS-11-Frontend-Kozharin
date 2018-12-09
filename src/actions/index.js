@@ -1,3 +1,5 @@
+import { getUserInfo } from '../utils/backend-utils'
+
 export const MESSAGE_SUBMITTED = 'MESSAGE_SUBMITTED';
 export const messageSubmitted = (chatID) => ({
     type: MESSAGE_SUBMITTED,
@@ -44,7 +46,24 @@ export const geoSubmitted = (geo, chatID) => ({
 });
 
 export const USER_AUTHORIZED = 'USER_AUTHORIZED';
-export const userAuthorized = (userID, token) => ({
-    type: USER_AUTHORIZED,
-    userID, token,
+export function userAuthorized(userID, token) {
+    return function(dispatch) {
+        getUserInfo(userID).then( userData =>
+            dispatch(updateUserData(
+                // TODO: здесь я пишу ключи с бекенда
+                {userID: userData.user_id,
+                    userName: userData.name,
+                    userNick: userData.nick,
+                    avatarURL: userData.avatar,
+                    token: token,
+                }
+            ))
+        )
+    }
+}
+
+export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
+export const updateUserData = (userData) => ({
+    type: UPDATE_USER_DATA,
+    userData,
 });
