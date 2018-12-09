@@ -9,7 +9,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userID: 4,
+            userID: 0,
             chat_id: 0,
             dialogs: [
                 {
@@ -19,7 +19,7 @@ class App extends Component {
                     lastMessagePreview: 'Знаешь, я люблю вискас. Он очень вкусный, а Борис вообще ' +
                         'говорит, что это главный источник его энергии :)',
                     // TODO: ставить здесь ID с бэка
-                    chatID: 4,
+                    chatID: 1,
                 },
                 {
                     avatarURL: 'https://cs7.pikabu.ru/post_img/2018/05/25/5/1527229519156826952.jpg',
@@ -28,7 +28,7 @@ class App extends Component {
                     lastMessagePreview: 'Ну и что, что я толстый? Ты просто не понимаешь, ' +
                         'что значит искусство тела!',
                     // TODO: ставить здесь ID с бэка
-                    chatID: 3,
+                    chatID: 2,
                 }
             ]
         };
