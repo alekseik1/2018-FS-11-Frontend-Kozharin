@@ -1,32 +1,23 @@
 import React from 'react';
 import styles from './styles.css';
 
-
-class FileInput extends React.Component {
-
-    _onChange(e) {
-        let files = e.target.files;
-        this.props.submitListener(files);
-    }
-
-    _handleClick(e) {
-        this.uploadInput.click();
-        e.preventDefault();
-    }
-
-    render() {
-        return (
-            <div className={styles.placeholder}>
-                <button className={styles.FileButton} onClick={this._handleClick.bind(this)} />
-                <input
-                    type='file'
-                    ref={(ref) => this.uploadInput = ref}
-                    className={styles.FileInput}
-                    onChange={this._onChange.bind(this)}
-                />
-            </div>
-        );
-    }
-}
+const FileInput = ({ currentFiles = [], onSuccess, onSubmit }) => {
+    let uploadInput;
+    return (
+        <div className={ styles.placeholder }>
+            <button
+                className={ styles.FileButton }
+                onClick={ uploadInput.click() }
+            />
+            <input
+                type='file'
+                ref={ (ref) => uploadInput = ref }
+                className={ styles.FileInput }
+                onClick={(e) => onSubmit()}
+                onChange={ (e) => onSuccess(e.target.files) }
+            />
+        </div>
+    );
+};
 
 export default FileInput;
