@@ -12,8 +12,6 @@ import {
     beginPendingOperation,
     endPendingOperation
 } from "../../actions";
-import { dispatch } from 'redux';
-import mapStateToProps from "react-redux/es/connect/mapStateToProps";
 
 const Input = ({ dispatch, text, files, geo, chatID }) => {
     return (
