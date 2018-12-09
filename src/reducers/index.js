@@ -34,6 +34,17 @@ function unfinishedMessages(state, action) {
     }
 }
 
+function authData(state={userID: 1, token: ''}, action) {
+    // TODO: здесь должна быть пафосная авторизация с бекендом. Когда-нибудь я ее сделаю
+    switch(action.type) {
+        case USER_AUTHORIZED:
+            return {userID: action.userID, token: action.token};
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     unfinishedMessages,
+    authData,
 });

@@ -42,3 +42,9 @@ export const geoSubmitted = (geo, chatID) => ({
     geo,
     chatID,
 });
+
+export const USER_AUTHORIZED = 'USER_AUTHORIZED';
+export const userAuthorized = (userID, token) => ({
+    type: USER_AUTHORIZED,
+    userID, token,
+});
