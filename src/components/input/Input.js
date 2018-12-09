@@ -15,25 +15,25 @@ import {
 import { dispatch } from 'redux';
 import mapStateToProps from "react-redux/es/connect/mapStateToProps";
 
-const Input = ({ dispatch, text, files, geo }) => {
+const Input = ({ dispatch, text, files, geo, chatID }) => {
     return (
         <div className={styles.Input}>
             <TextInput
-                onEnterKeyListener={dispatch(messageSubmitted())}
-                onChangeListener={(text) => dispatch(textSubmitted(text))}
+                onEnterKeyListener={dispatch(messageSubmitted(chatID))}
+                onChangeListener={(text) => dispatch(textSubmitted(text, chatID))}
                 currentText={text}
             />
             <FileInput
-                onSubmit={() => dispatch(beginPendingOperation())}
+                onSubmit={() => dispatch(beginPendingOperation(chatID))}
                 onSuccess={(result) => {
-                    dispatch(endPendingOperation()); dispatch(filesSubmitted(result));
+                    dispatch(endPendingOperation(chatID)); dispatch(filesSubmitted(result, chatID));
                 }}
                 currentFiles={files}
             />
             <GeoInput
                 onSubmit={() => dispatch(beginPendingOperation())}
                 onSuccess={(result) => {
-                    dispatch(endPendingOperation()); dispatch(geoSubmitted(result));
+                    dispatch(endPendingOperation(chatID)); dispatch(geoSubmitted(result, chatID));
                 }}
                 currentGeo={geo}
             />
