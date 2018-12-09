@@ -53,13 +53,12 @@ class App extends Component {
                         />
                     );
                 }} />
-                <Route exact path='/im' render={(props) =>
+                <Route exact path='/im/:chatID?' render={(props) =>
                     <Dialog {...props}
                             prevLink={'/dialogs'}
                             // TODO: брать эти значения с бека
                             fullName={this.state.chatName}
                             avatarURL={'https://cs7.pikabu.ru/post_img/2018/05/25/5/1527229519156826952.jpg'}
-                            chatID={this.state.chatID}
                     />}
                 />
             </Switch>

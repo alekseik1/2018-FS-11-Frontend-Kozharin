@@ -19,8 +19,9 @@ class Dialog extends Component {
     componentDidMount() {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
-        console.log(this.DEBUG_USER_ID);
-        getChatMessages(this.props.chatID, this.props.userID, this.DEBUG_LIMIT)
+        console.log('PROPS are');
+        console.log(this.props);
+        getChatMessages(this.props.match.params.chatID, this.props.userID, this.DEBUG_LIMIT)
             .then((result) => {
                 console.log('getChatMessages: ');
                 console.log(result);
@@ -38,7 +39,7 @@ class Dialog extends Component {
             isOwn: true
         });
 
-        sendChatMessage(this.props.chatID, this.props.userID, message.text).then( () => {
+        sendChatMessage(this.props.match.params.chatID, this.props.userID, message.text).then( () => {
             this.setState({messages: mes, shouldScrollDown: true});
         });
     }

@@ -20,7 +20,7 @@ class DialogsList extends React.Component {
     render() {
         if (this.state.dialogToOpen) {
             // TODO: редиректить на диалог с конкретным пользователем
-            return <Redirect to='/im' />;
+            return <Redirect to={`/im/${this.state.dialogToOpen}`} />;
         }
         return (
             <div className={styles.dialogs_list}>
