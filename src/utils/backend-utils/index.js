@@ -22,8 +22,8 @@ const makeJsonrpcRequest = (methodName, params) => {
  * Загружает диалоги пользователя
  * @param userID id пользователя
  */
-function getChats(userID, token) {
-    return makeJsonrpcRequest('get_user_chats', {'user_id': userID, 'limit': 100} )
+function getChats(userID, token, limit=100) {
+    return makeJsonrpcRequest('get_user_chats', {'user_id': userID, 'limit': limit} )
 }
 
 function getUserInfo(userID) {

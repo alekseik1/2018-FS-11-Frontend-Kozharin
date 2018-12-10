@@ -78,9 +78,9 @@ export const chatsLoaded = (chats) => ({
 });
 
 export const LOAD_CHATS = 'LOAD_CHATS';
-export function loadChats(userID, token) {
+export function loadChats(userID, token, limit=100) {
     return function(dispatch) {
-        getChats(userID, token).then(chats => {
+        getChats(userID, token, limit).then(chats => {
             chats = chats.result;
             // NOTE: здесь преобразуем от структуры бека к структуре фронта
             chats = chats.map(item => {
