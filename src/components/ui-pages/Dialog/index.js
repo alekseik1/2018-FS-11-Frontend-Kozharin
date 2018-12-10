@@ -49,10 +49,10 @@ class Dialog extends Component {
         return (
             <div className={styles.react_container}>
                 <Header
-                    prevLink={this.props.prevLink}
-                    fullName={this.props.chatID}
+                    fullName={this.props.chatName}
                     avatarURL={this.props.chatAvatar}
                     lastOnline={this.getLastOnline()}
+                    onBack={chatClosed}
                 />
                 <div />
                 <Input onSubmit={this._onMessageSubmit.bind(this)} />
@@ -62,7 +62,7 @@ class Dialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    chatName: state.loadedChats,
+    chatName: state.loadedChats[state.currentChat],
     chatAvatar: state.loadedChats,
     messages: state,
     myID: state.authData.userID,

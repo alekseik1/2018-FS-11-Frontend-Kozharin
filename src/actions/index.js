@@ -77,6 +77,10 @@ export const chatsLoaded = (chats) => ({
     chats,
 });
 
+/**
+ * Получает список чатов, но не сами сообщения чатов!
+ * @type {string}
+ */
 export const LOAD_CHATS = 'LOAD_CHATS';
 export function loadChats(userID, token, limit=100) {
     return function(dispatch) {
@@ -86,7 +90,9 @@ export function loadChats(userID, token, limit=100) {
             chats = chats.map(item => {
                 return { chatID: item.chat_id, chatName: item.topic, avatar: item.avatar,
                     isGroup: item.is_group_chat === 0, lastReadID: item.last_read_message_id,
-                    newMessages: item.new_messages, messages: [] }
+                    newMessages: item.new_messages,
+                    messages: []
+                }
             });
             dispatch(chatsLoaded(chats));
         });
