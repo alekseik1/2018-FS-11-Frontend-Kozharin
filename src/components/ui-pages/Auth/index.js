@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 import styles from './styles.css';
 import { userAuthorized } from "../../../actions";
 
-const DEBUG_USER_ID = 0;
+const DEBUG_USER_ID = 1;
 
 const Auth = ({ onAuthCallback }) => {
     onAuthCallback();
     return (
-        <Redirect to='/dialogs' />
+        <Redirect to={`/dialogs/id${DEBUG_USER_ID}`} />
     )
 };
 

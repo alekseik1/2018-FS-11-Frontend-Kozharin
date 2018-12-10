@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Dialog from "./components/ui-pages/Dialog";
 import {BrowserRouter, Route, Link, Switch} from 'react-router-dom';
 import Auth from "./components/ui-pages/Auth/index"
-import DialogsList from "./components/ui-pages/DialogsList/index";
+import DialogsList from "./components/ui-pages/ChatsList/index";
+import ChatsList from "./components/ui-pages/ChatsList";
 
 class App extends Component {
 
@@ -39,9 +40,10 @@ class App extends Component {
         <BrowserRouter>
             <Switch>
                 <Route exact path='/' component={Auth} />
-                <Route exact path='/dialogs' render={(props) => {
+                <Route exact path='/dialogs/id:userID?' render={(props) => {
+                    return <ChatsList {...props} />;
                     return (
-                        <DialogsList
+                        <ChatsList
                             {...props}
                             dialogs={this.state.dialogs}
                             onDialogSelectListener={(chatID, chatName) => {
@@ -53,11 +55,11 @@ class App extends Component {
                         />
                     );
                 }} />
-                <Route exact path='/im/:chatID?' render={(props) =>
+                <Route exact path='/chat:chatID?' render={(props) =>
                     <Dialog {...props}
                             prevLink={'/dialogs'}
                             // TODO: брать эти значения с бека
-                            fullName={this.state.chatName}
+                            fullName={'123'}
                             avatarURL={'https://cs7.pikabu.ru/post_img/2018/05/25/5/1527229519156826952.jpg'}
                     />}
                 />
@@ -66,5 +68,9 @@ class App extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+
+});
 
 export default App;

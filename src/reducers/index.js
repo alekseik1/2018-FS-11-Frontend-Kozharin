@@ -1,7 +1,9 @@
 import { combineReducers } from "redux";
 import {
-    FILES_SUBMITTED, GEO_SUBMITTED,
-    TEXT_SUBMITTED, UPDATE_USER_DATA, USER_AUTHORIZED
+    CHAT_MESSAGES_LOADED,
+    CHATS_LOADED,
+    FILES_SUBMITTED, GEO_SUBMITTED, CHAT_OPENED,
+    TEXT_SUBMITTED, UPDATE_USER_DATA, USER_AUTHORIZED, CHAT_CLOSED
 } from '../actions/index';
 
 function unfinishedMessages(state =
@@ -67,8 +69,42 @@ function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', 
     }
 }
 
+function loadedChats(state={0: {chatID: 0, messages: [], isRead: true}}, action) {
+    switch (action.type) {
+        case CHATS_LOADED:
+            return {
+                ...state,
+                ...action.chats,
+            };
+        default:
+            return state;
+    }
+}
+
+function currentChat(state=-1, action) {
+    switch (action.type) {
+        case CHAT_OPENED:
+            return action.chatID;
+        case CHAT_CLOSED:
+            return -1;
+        default:
+            return state;
+    }
+}
+
+function chatMessages(state={0: []}, action) {
+    switch (action.type) {
+        case CHAT_MESSAGES_LOADED:
+            return {...state, ...action.messages};
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     unfinishedMessages,
     authData,
     userData,
+    loadedChats,
+    currentChat,
 });

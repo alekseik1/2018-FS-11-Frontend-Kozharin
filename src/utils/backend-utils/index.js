@@ -1,12 +1,12 @@
 // TODO: поменять на реальный сервер в продакшне
 const BACKEND_URL = 'http://localhost:5000/api/';
 
-let currentID = 0;
+let currentID = 10;
 
 const makeJsonrpcRequest = (methodName, params) => {
     currentID++;
     // Вряд ли у нас будет 1000 запросов одновременно
-    currentID = Math.floor(currentID / 1000);
+    currentID = currentID % 1000;
     return fetch(BACKEND_URL, {
         method: 'POST',
         body: JSON.stringify({
@@ -23,7 +23,7 @@ const makeJsonrpcRequest = (methodName, params) => {
  * @param userID id пользователя
  */
 function getChats(userID, token) {
-    return makeJsonrpcRequest('get_user_chats', {'user_id': userID} )
+    return makeJsonrpcRequest('get_user_chats', {'user_id': userID, 'limit': 100} )
 }
 
 function getUserInfo(userID) {
@@ -32,7 +32,6 @@ function getUserInfo(userID) {
 
 
 function getChatMessages(chatId, userID, limit) {
-    console.log('getChatMessages!');
     let messages = [];
     return makeJsonrpcRequest(
         'get_messages_by_chat',

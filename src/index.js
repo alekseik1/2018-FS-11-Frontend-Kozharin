@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import {applyMiddleware, createStore} from "redux";
 import rootReducer from './reducers';
 import thunkMiddleware from "redux-thunk";
 import { createLogger} from "redux-logger";
+import Root from "./components/Root";
 
 const loggerMiddleware = createLogger();
 
@@ -15,7 +15,7 @@ const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, loggerMi
 
 ReactDOM.render(
     <Provider store={store} >
-        <App />
+        <Root />
     </Provider>,
     document.getElementById('root')
 );
