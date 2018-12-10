@@ -110,14 +110,15 @@ export const LOAD_CHAT_MESSAGES = 'LOAD_CHAT_MESSAGES';
 export const loadChatMessages = (chatID, userID, limit) => {
     return function(dispatch) {
         getChatMessages(chatID, userID, limit).then( messages =>
-            dispatch(chatMessagesLoaded(messages))
+            dispatch(chatMessagesLoaded(chatID, messages))
         )
     }
 };
 
 export const CHAT_MESSAGES_LOADED = 'CHAT_MESSAGES_LOADED';
-export const chatMessagesLoaded = (messages) => ({
+export const chatMessagesLoaded = (chatID, messages) => ({
     type: CHAT_MESSAGES_LOADED,
+    chatID,
     messages
 });
 

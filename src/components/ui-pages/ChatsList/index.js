@@ -34,7 +34,6 @@ class ChatsList extends React.Component {
 
     render() {
         if (this.props.currentChat !== -1) {
-            console.log('Do redirect'); console.log(this.props);
             // TODO: редиректить на диалог с конкретным пользователем
             return <Redirect to={`/chat${this.props.currentChat}`} />;
         } else {
