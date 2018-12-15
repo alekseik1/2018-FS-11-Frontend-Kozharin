@@ -12,8 +12,6 @@ import {
     updateUserData
 } from "../../../actions";
 
-const DEBUG_USER_ID = 1;
-
 const AuthPage = ({ userID, handleLogin }) => {
     console.log(userID);
     if(userID === undefined) { // Не авторизован

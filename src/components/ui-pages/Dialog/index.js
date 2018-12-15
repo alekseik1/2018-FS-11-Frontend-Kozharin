@@ -12,15 +12,19 @@ class Dialog extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {messageLimit: 100};
+        this.state = {
+            messageLimit: 100,
+            chatID: this.props.match.chatID,
+            myID: this.props.match.userID
+        };
     }
 
     componentDidMount() {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
         console.log('Dialog props:', this.props);
-        this.props.chatOpened(this.props.chatID);
-        this.props.loadMessages(this.props.chatID, this.props.myID, this.state.messageLimit);
+        this.props.chatOpened(this.state.chatID);
+        this.props.loadMessages(this.state.chatID, this.state.myID, this.state.messageLimit);
     }
 
     _onMessageSubmit(message) {
@@ -33,7 +37,7 @@ class Dialog extends Component {
             isOwn: true
         });
 
-        sendChatMessage(this.props.match.params.chatID, this.props.userID, message.text).then( () => {
+        sendChatMessage(this.state.chatID, this.state.myID, message.text).then( () => {
             this.setState({messages: mes, shouldScrollDown: true});
         });
     }
@@ -46,11 +50,14 @@ class Dialog extends Component {
     }
 
     render() {
+        if (this.state.myID === -1) {
+            loadChatMessages()
+        }
         return (
             <div className={styles.react_container}>
                 <Header
-                    fullName={this.props.chatName}
-                    avatarURL={this.props.chatAvatar}
+                    fullName={this.state.chatName}
+                    avatarURL={''}
                     lastOnline={this.getLastOnline()}
                     onBack={chatClosed}
                 />
@@ -62,17 +69,7 @@ class Dialog extends Component {
 }
 
 const mapStateToProps = (state) => {
-    // Ничего не загружено
-    if (isEmptyObject(state.loadedChats)) {
-        return {chatName: 'NO DATA', chatAvatar: null, messages: [], myID: -1}
-    }
-    return {
-        chatName: state.loadedChats[state.currentChat].chatName,
-            chatAvatar: state.loadedChats[state.currentChat].chatAvatar,
-        messages: state.loadedChats[state.currentChat].messages,
-        myID: state.userData.userID,
-        chatID: state.loadedChats[state.currentChat].chatID,
-    }
+    return {}
 };
 
 const mapDispatchToProps = (dispatch) => ({

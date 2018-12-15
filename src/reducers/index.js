@@ -49,7 +49,7 @@ function unfinishedMessages(state =
     }
 }
 
-function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', avatarURL: '', token: ''},
+function userData(state={userID: undefined, userName: undefined, userNick: undefined, avatarURL: undefined, token: undefined},
                   action) {
     switch (action.type) {
         case UPDATE_USER_DATA:
