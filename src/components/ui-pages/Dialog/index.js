@@ -4,28 +4,27 @@ import Input from '../../input/Input';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
 import {getChatMessages, sendChatMessage} from '../../../utils/backend-utils/index';
+import {chatOpened, loadChatMessages, chatClosed} from "../../../actions";
+import { connect } from 'react-redux';
+import {isEmptyObject} from "../../../utils/js-checks";
 
 class Dialog extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {messages: [], shouldScrollDown: true};
-        this.serverURL = '/api/';
-        this.DEBUG_CHAT_ID = 4;
-        this.DEBUG_USER_ID = 0;
-        this.DEBUG_LIMIT = 10e5;
+        this.state = {
+            messageLimit: 100,
+            chatID: this.props.match.chatID,
+            myID: this.props.match.userID
+        };
     }
 
     componentDidMount() {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
-        console.log(this.DEBUG_USER_ID);
-        getChatMessages(this.props.chatID, this.props.userID, this.DEBUG_LIMIT)
-            .then((result) => {
-                console.log('getChatMessages: ');
-                console.log(result);
-                this.setState({messages: result})
-            });
+        console.log('Dialog props:', this.props);
+        this.props.chatOpened(this.state.chatID);
+        this.props.loadMessages(this.state.chatID, this.state.myID, this.state.messageLimit);
     }
 
     _onMessageSubmit(message) {
@@ -38,7 +37,7 @@ class Dialog extends Component {
             isOwn: true
         });
 
-        sendChatMessage(this.props.chatID, this.props.userID, message.text).then( () => {
+        sendChatMessage(this.state.chatID, this.state.myID, message.text).then( () => {
             this.setState({messages: mes, shouldScrollDown: true});
         });
     }
@@ -51,22 +50,35 @@ class Dialog extends Component {
     }
 
     render() {
+        if (this.state.myID === -1) {
+            loadChatMessages()
+        }
         return (
             <div className={styles.react_container}>
                 <Header
-                    prevLink={this.props.prevLink}
-                    fullName={this.props.fullName}
-                    avatarURL={this.props.avatarURL}
+                    fullName={this.state.chatName}
+                    avatarURL={''}
                     lastOnline={this.getLastOnline()}
+                    onBack={chatClosed}
                 />
-                <MessageContainer
-                    messages={this.state.messages}
-                    shouldScrollDown={this.state.shouldScrollDown}
-                />
+                <div />
                 <Input onSubmit={this._onMessageSubmit.bind(this)} />
             </div>
         );
     }
 }
 
-export default Dialog;
+const mapStateToProps = (state) => {
+    return {}
+};
+
+const mapDispatchToProps = (dispatch) => ({
+    loadMessages: (chatID, myID, limit) =>  dispatch(
+        loadChatMessages(chatID, myID, limit)
+    ),
+    sendMessage: (message) => dispatch(),
+    chatOpened: (chatID) => dispatch(chatOpened(chatID)),
+    chatClosed: () => dispatch(chatClosed()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dialog);
