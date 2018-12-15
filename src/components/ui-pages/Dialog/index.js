@@ -70,7 +70,7 @@ const mapStateToProps = (state) => {
         chatName: state.loadedChats[state.currentChat].chatName,
             chatAvatar: state.loadedChats[state.currentChat].chatAvatar,
         messages: state.loadedChats[state.currentChat].messages,
-        myID: state.authData.userID,
+        myID: state.userData.userID,
         chatID: state.loadedChats[state.currentChat].chatID,
     }
 };

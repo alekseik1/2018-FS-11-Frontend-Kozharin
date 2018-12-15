@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import Auth from "../ui-pages/Auth";
+import Auth from "../ui-pages/AuthPage";
 import ChatsList from "../ui-pages/ChatsList";
 import Dialog from "../ui-pages/Dialog";
 import React from "react";
@@ -9,7 +9,7 @@ const Root = (props) => {
         <BrowserRouter>
             <Switch>
                 <Route exact path='/' component={Auth} />
-                <Route exact path='/dialogs/id:userID?' render={(props) => {
+                <Route exact path='/chats/id:userID?' render={(props) => {
                     return <ChatsList {...props} />;
                 }}
                 />

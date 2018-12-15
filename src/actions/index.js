@@ -45,26 +45,6 @@ export const geoSubmitted = (geo, chatID) => ({
     chatID,
 });
 
-export const USER_AUTHORIZED = 'USER_AUTHORIZED';
-export function userAuthorized(userID, token) {
-    return function(dispatch) {
-        getUserInfo(userID).then( userData => {
-            userData = userData.result[0];
-            dispatch(updateUserData(
-                // TODO: здесь я пишу ключи с бекенда
-                {
-                    userID: userData.user_id,
-                    userName: userData.name,
-                    userNick: userData.nick,
-                    avatarURL: userData.avatar,
-                    token: token,
-                }
-                )
-            );
-        });
-    }
-}
-
 export const UPDATE_USER_DATA = 'UPDATE_USER_DATA';
 export const updateUserData = (userData) => ({
     type: UPDATE_USER_DATA,
@@ -125,4 +105,21 @@ export const chatMessagesLoaded = (chatID, messages) => ({
 export const CHAT_CLOSED = 'CHAT_CLOSED';
 export const chatClosed = () => ({
     type: CHAT_CLOSED,
+});
+
+export const LOGIN_REQUESTED = 'LOGIN_REQUESTED';
+export const loginRequested = () => ({
+    type: LOGIN_REQUESTED,
+});
+
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const loginSuccess = (payload) => ({
+    type: LOGIN_SUCCESS,
+    payload: payload,
+});
+
+export const LOGIN_FAILED = 'LOGIN_FAILED';
+export const loginFailed = (error) => ({
+    type: LOGIN_FAILED,
+    error: error,
 });

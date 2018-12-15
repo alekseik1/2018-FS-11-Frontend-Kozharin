@@ -3,7 +3,7 @@ import {
     CHAT_MESSAGES_LOADED,
     CHATS_LOADED,
     FILES_SUBMITTED, GEO_SUBMITTED, CHAT_OPENED,
-    TEXT_SUBMITTED, UPDATE_USER_DATA, USER_AUTHORIZED, CHAT_CLOSED
+    TEXT_SUBMITTED, UPDATE_USER_DATA, CHAT_CLOSED, LOGIN_FAILED, LOGIN_REQUESTED, LOGIN_SUCCESS
 } from '../actions/index';
 
 function unfinishedMessages(state =
@@ -49,21 +49,13 @@ function unfinishedMessages(state =
     }
 }
 
-function authData(state={userID: 1, token: ''}, action) {
-    // TODO: здесь должна быть пафосная авторизация с бекендом. Когда-нибудь я ее сделаю
-    switch(action.type) {
-        case USER_AUTHORIZED:
-            return {userID: action.userID, token: action.token};
-        default:
-            return state;
-    }
-}
-
 function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', avatarURL: '', token: ''},
                   action) {
     switch (action.type) {
         case UPDATE_USER_DATA:
             return action.userData;
+        case LOGIN_FAILED:
+
         default:
             return state;
     }
@@ -98,10 +90,21 @@ function currentChat(state=-1, action) {
     }
 }
 
+function pendingLogin(state=false, action) {
+    switch(action.type) {
+        case LOGIN_REQUESTED:
+            return true;
+        case LOGIN_SUCCESS:
+            return false;
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     unfinishedMessages,
-    authData,
     userData,
+    pendingLogin,
     loadedChats,
     currentChat,
 });
