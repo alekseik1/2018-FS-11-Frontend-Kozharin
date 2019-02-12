@@ -23,7 +23,7 @@ class Dialog extends Component {
         // Подргужаем сообщения с бекенда
         // TODO: прикрутить сюда авторизацию
         console.log('Dialog props:', this.props);
-        this.props.chatOpened(this.state.chatID);
+        //this.props.chatOpened(this.state.chatID);
         this.props.loadMessages(this.state.chatID, this.state.myID, this.state.messageLimit);
     }
 

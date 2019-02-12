@@ -50,6 +50,7 @@ const mapStateToProps = state => {
     return {
         chats: state.loadedChats,
         currentChat: state.currentChat,
+        userID: state.userID,
     }
 };
 

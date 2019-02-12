@@ -75,12 +75,12 @@ export function loadChats(userID, token, limit=100) {
                 }
             });
             dispatch(chatsLoaded(chats));
-        });
+        }, error => console.log(error));
     }
 }
 
 export const CHAT_OPENED = 'CHAT_OPENED';
-export const chatOpened = (chatID) => ({
+export const chatOpened = (chatID=-1) => ({
     type: CHAT_OPENED,
     chatID,
 });
