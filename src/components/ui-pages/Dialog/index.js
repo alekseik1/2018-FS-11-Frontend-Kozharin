@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './styles.css';
-import Input from '../../input/Input';
+import InputForm from '../../input/InputForm';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
 import {getChatMessages, sendChatMessage} from '../../../utils/backend-utils/index';
@@ -55,7 +55,7 @@ class Dialog extends Component {
                     onBack={chatClosed}
                 />
                 <div />
-                <Input onSubmit={this._onMessageSubmit.bind(this)} />
+                <InputForm onSubmit={this._onMessageSubmit.bind(this)} />
             </div>
         );
     }
