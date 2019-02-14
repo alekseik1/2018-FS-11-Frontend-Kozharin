@@ -12,60 +12,9 @@ import {
     LOGIN_REQUESTED,
     LOGIN_SUCCESS,
     FETCH_MESSAGES_REQUEST,
-    FETCH_MESSAGES_SUCCESS, FETCH_MESSAGES_ERROR
+    FETCH_MESSAGES_SUCCESS,
+    FETCH_MESSAGES_ERROR
 } from '../actions/index';
-import {isPending} from "q";
-
-function unfinishedMessages(state =
-                                [{chatID: 0, text: '', geo: {}, files: []}]
-                                , action) {
-    switch(action.type) {
-        case TEXT_SUBMITTED:
-            /* Пример массива:
-             [
-                {chatID: 2, text: 'asd', geo: {}, files: []},
-                {chatID: 3, text: 'asd', geo: {}, files: []},
-             ]
-             */
-            return state.map((key) => {
-                // Для данного чата
-                if (key.chatID === action.chatID) {
-                    // Записываем текущий текст
-                    return {
-                        ...state.find((element, index, array) => {return element.chatID == action.chatID}),
-                        text: action.text
-                    };
-                }
-                return state.find((element, index, array) => {return element.chatID == action.chatID});
-            });
-        case FILES_SUBMITTED:
-            return state.map((key) => {
-                // Для данного чата
-                if (key.chatID === action.chatID) {
-                    // Записываем текущий текст
-                    return {
-                        ...state.find((element, index, array) => {return element.chatID == action.chatID}),
-                        files: action.files
-                    };
-                }
-                return state.find((element, index, array) => {return element.chatID == action.chatID});
-            });
-        case GEO_SUBMITTED:
-            return state.map((key) => {
-                // Для данного чата
-                if (key.chatID === action.chatID) {
-                    // Записываем текущий текст
-                    return {
-                        ...state.find((element, index, array) => {return element.chatID == action.chatID}),
-                        geo: action.geo
-                    };
-                }
-                return state.find((element, index, array) => {return element.chatID == action.chatID});
-            });
-        default:
-            return state;
-    }
-}
 
 function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', avatarURL: '', token: ''},
                   action) {
@@ -73,7 +22,7 @@ function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', 
         case UPDATE_USER_DATA:
             return action.userData;
         case LOGIN_FAILED:
-
+            return {userID: -1, userName: 'Guest', userNick: 'Guest', avatarURL: '', token: '-1'};
         default:
             return state;
     }
@@ -105,17 +54,6 @@ function currentChat(state=-1, action) {
             return action.chatID;
         case CHAT_CLOSED:
             return -1;
-        default:
-            return state;
-    }
-}
-
-function pendingLogin(state=false, action) {
-    switch(action.type) {
-        case LOGIN_REQUESTED:
-            return true;
-        case LOGIN_SUCCESS:
-            return false;
         default:
             return state;
     }
@@ -156,9 +94,7 @@ function chatsInfo(state={0: {isPending: false, error: -1, messages: []}}, actio
 }
 
 export default combineReducers({
-    unfinishedMessages,
     userData,
-    pendingLogin,
     chatsInfo,
     loadedChats,
     currentChat,

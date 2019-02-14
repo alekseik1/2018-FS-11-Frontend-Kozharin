@@ -12,11 +12,13 @@ import {
     updateUserData
 } from "../../../actions";
 
-const DEBUG_USER_ID = 1;
+const DEBUG_USER_ID = 0;
+const IS_DEBUG = true;
 
-const AuthPage = ({ userID, handleLogin }) => {
-    console.log(userID);
-    if(userID === undefined) { // Не авторизован
+const AuthPage = ({ userID, handleLogin, loginDEBUG }) => {
+    loginDEBUG();
+    userID = DEBUG_USER_ID;
+    if(userID === undefined && !IS_DEBUG) { // Не авторизован
         return (
             <button onClick={handleLogin}>VK</button>
         )
@@ -26,7 +28,7 @@ const AuthPage = ({ userID, handleLogin }) => {
 };
 
 const mapStateToProps = (state={}) => ({
-    userID: state.userData.userID, token: state.userData.token,
+    isAuthorized: state.token,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -36,7 +38,6 @@ const mapDispatchToProps = dispatch => ({
         //eslint-disable-next-line no-undef
         VK.Auth.login(r => {
             if (r.session) {
-                console.log('session', r);
                 const userID = r.session.user.id;
                 // Здесь можно сделать ник получше
                 const nick = r.session.user.domain;
@@ -55,9 +56,16 @@ const mapDispatchToProps = dispatch => ({
                     userNick: nick, avatarURL: '', token: token
                 }))
             } else {
-                dispatch(loginFailed(new Error('Ошибка авторизации')));
+                dispatch(loginFailed(new Error('Auth error')));
             }
         },)
+    },
+    loginDEBUG: () => {
+        dispatch(loginSuccess());
+        dispatch(updateUserData({
+            userID: DEBUG_USER_ID, userName: 'DEBUG_NAME',
+            userNick: 'DEBUG', avatarURL: '', token: '-2'
+        }));
     }
 });
 
