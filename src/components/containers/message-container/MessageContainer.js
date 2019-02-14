@@ -12,12 +12,6 @@ const messageSchema = schema({
 });
 
 class MessageContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            messages: props ? props.messages: [],
-        }
-    }
 
     _scrollDown() {
         // TODO: возможно, постоянный поиск элемента сделает приложение менее производительным
@@ -38,13 +32,15 @@ class MessageContainer extends React.Component {
             <div className={styles.InnerScroll}>
                 <div className={styles.MessageContainer}>
                     {this.props.messages.map((element, index) => {
-                        console.log('validating message: ', messageSchema.validate(element) ? 'OK': 'BAD!');
+                        console.log('validating message: ', element, ' || ', messageSchema.validate(element) ? 'OK': 'BAD!');
                         return <Message
-                            isMine={element.isOwn}
-                            text={element.text}
-                            time={element.time}
+                            // Тут немного синтаксис меняется
+                            isMine={element.userID === this.props.ownID}
+                            text={element.content}
+                            time={element.added_at}
                             key={index}
-                            isRead={element.isRead}/>;
+                            // TODO: брать с бэкенда, прочитано ли сообщение
+                            isRead={false}/>;
                     })}
                 </div>
             </div>

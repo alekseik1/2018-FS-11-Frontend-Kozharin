@@ -1,4 +1,4 @@
-import {getUserInfo, getChats, getChatMessages} from '../utils/backend-utils'
+import {getUserInfo, getChats, getChatMessages, messageLimit} from '../utils/backend-utils'
 
 export const MESSAGE_SUBMITTED = 'MESSAGE_SUBMITTED';
 export const messageSubmitted = (chatID) => ({
@@ -82,7 +82,7 @@ export function loadChats(userID, token, limit=100) {
 export const CHAT_OPENED = 'CHAT_OPENED';
 export const chatOpened = (chatID) => ({
     type: CHAT_OPENED,
-    chatID,
+    chatID: chatID,
 });
 
 export const LOAD_CHAT_MESSAGES = 'LOAD_CHAT_MESSAGES';
@@ -123,3 +123,35 @@ export const loginFailed = (error) => ({
     type: LOGIN_FAILED,
     error: error,
 });
+
+
+export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
+export const fetchMessagesRequest = (chatID) => ({
+    type: FETCH_MESSAGES_REQUEST,
+    chatID: chatID,
+});
+
+export const FETCH_MESSAGES_SUCCESS = 'FETCH_MESSAGES_SUCCESS';
+export const fetchMessagesSuccess = (chatID, response) => ({
+    type: FETCH_MESSAGES_SUCCESS,
+    chatID: chatID,
+    response: response,
+});
+
+export const FETCH_MESSAGES_ERROR = 'FETCH_MESSAGES_ERROR';
+export const fetchMessagesError = (chatID, error) => ({
+    type: FETCH_MESSAGES_ERROR,
+    chatID: chatID,
+    error: error
+});
+
+export function fetchMessages(chatID, token) {
+    return function(dispatch) {
+        // Говорим, что был запрос на загрузку чата
+        dispatch(fetchMessagesRequest(chatID));
+        return getChatMessages(chatID).then(
+            result => dispatch(fetchMessagesSuccess(chatID, result)),
+            error => dispatch(fetchMessagesError(chatID, error))
+        );
+    }
+}

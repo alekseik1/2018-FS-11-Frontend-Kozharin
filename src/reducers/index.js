@@ -2,47 +2,65 @@ import { combineReducers } from "redux";
 import {
     CHAT_MESSAGES_LOADED,
     CHATS_LOADED,
-    FILES_SUBMITTED, GEO_SUBMITTED, CHAT_OPENED,
-    TEXT_SUBMITTED, UPDATE_USER_DATA, CHAT_CLOSED, LOGIN_FAILED, LOGIN_REQUESTED, LOGIN_SUCCESS
+    FILES_SUBMITTED,
+    GEO_SUBMITTED,
+    CHAT_OPENED,
+    TEXT_SUBMITTED,
+    UPDATE_USER_DATA,
+    CHAT_CLOSED,
+    LOGIN_FAILED,
+    LOGIN_REQUESTED,
+    LOGIN_SUCCESS,
+    FETCH_MESSAGES_REQUEST,
+    FETCH_MESSAGES_SUCCESS, FETCH_MESSAGES_ERROR
 } from '../actions/index';
+import {isPending} from "q";
 
 function unfinishedMessages(state =
-                                {0: {chatID: 0, text: '', geo: {}, files: []}}
+                                [{chatID: 0, text: '', geo: {}, files: []}]
                                 , action) {
     switch(action.type) {
         case TEXT_SUBMITTED:
             /* Пример массива:
-             {2:
+             [
                 {chatID: 2, text: 'asd', geo: {}, files: []},
-              3:
                 {chatID: 3, text: 'asd', geo: {}, files: []},
-             }
+             ]
              */
-            return state.keys().map((key) => {
+            return state.map((key) => {
                 // Для данного чата
-                if (key === action.chatID) {
+                if (key.chatID === action.chatID) {
                     // Записываем текущий текст
-                    return {[key]: {...state[key], text: action.text}};
+                    return {
+                        ...state.find((element, index, array) => {return element.chatID == action.chatID}),
+                        text: action.text
+                    };
                 }
-                return {[key]: state[key]};
+                return state.find((element, index, array) => {return element.chatID == action.chatID});
             });
         case FILES_SUBMITTED:
-            return state.keys().map((key) => {
+            return state.map((key) => {
                 // Для данного чата
-                if (key === action.chatID) {
+                if (key.chatID === action.chatID) {
                     // Записываем текущий текст
-                    return {[key]: {...state[key], files: action.files}};
+                    return {
+                        ...state.find((element, index, array) => {return element.chatID == action.chatID}),
+                        files: action.files
+                    };
                 }
-                return {[key]: state[key]};
+                return state.find((element, index, array) => {return element.chatID == action.chatID});
             });
         case GEO_SUBMITTED:
-            return state.keys().map((key) => {
+            return state.map((key) => {
                 // Для данного чата
-                if (key === action.chatID) {
+                if (key.chatID === action.chatID) {
                     // Записываем текущий текст
-                    return {[key]: {...state[key], geo: action.geo}};
+                    return {
+                        ...state.find((element, index, array) => {return element.chatID == action.chatID}),
+                        geo: action.geo
+                    };
                 }
-                return {[key]: state[key]};
+                return state.find((element, index, array) => {return element.chatID == action.chatID});
             });
         default:
             return state;
@@ -82,6 +100,8 @@ function loadedChats(state={}, action) {
 function currentChat(state=-1, action) {
     switch (action.type) {
         case CHAT_OPENED:
+            // BUG: Иногда вызывается CHAT_OPENED с undefined. Пока будет доп.проверка
+            if (!action.chatID) return state;
             return action.chatID;
         case CHAT_CLOSED:
             return -1;
@@ -101,10 +121,45 @@ function pendingLogin(state=false, action) {
     }
 }
 
+function chatsInfo(state={0: {isPending: false, error: -1, messages: []}}, action) {
+    switch(action.type) {
+        case FETCH_MESSAGES_REQUEST:
+            return {
+                [action.chatID]: {
+                    isPending: true,
+                    error: false,
+                    // Оставляем те же сообщения, что были получены ранее, при их наличии
+                    messages: state[action.chatID] ? [...state[action.chatID].messages] : []
+                },
+            };
+        case FETCH_MESSAGES_ERROR:
+            return {
+                [action.chatID]: {
+                    isPending: false,
+                    error: action.error,
+                    // Оставляем те же сообщения, что были получены ранее, при их наличии
+                    messages: state[action.chatID] ? [...state[action.chatID].messages] : []
+                }, ...state,
+            };
+        case FETCH_MESSAGES_SUCCESS:
+            return {
+                [action.chatID]: {
+                    isPending: false,
+                    error: false,
+                    // Оставляем те же сообщения, что были получены ранее, при их наличии
+                    messages: state[action.chatID] ? [...state[action.chatID].messages, ...action.response] : []
+                },
+            };
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     unfinishedMessages,
     userData,
     pendingLogin,
+    chatsInfo,
     loadedChats,
     currentChat,
 });
