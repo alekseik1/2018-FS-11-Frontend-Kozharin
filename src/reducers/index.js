@@ -68,7 +68,7 @@ function chatsInfo(state={0: {isFetching: false, error: -1, messages: [], savedT
                     error: false,
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
                     messages: state[action.chatID] ? [...state[action.chatID].messages] : []
-                },
+                }, ...state
             };
         case FETCH_MESSAGES_ERROR:
             return {
