@@ -184,7 +184,11 @@ export function submitMessage(chatID, senderID, token, text, file, geo) {
     return function(dispatch) {
         dispatch(sendMessageRequest());
         return sendChatMessage(chatID, senderID, token, text, file, geo).then(
-            result => dispatch(sendMessageSuccess(result)),
+            result => {
+                dispatch(sendMessageSuccess(result));
+                // Очистим текст после отправки
+                dispatch(messageTextChanged(chatID, ''));
+            },
             error => dispatch(sendMessageError(error))
         );
     }
