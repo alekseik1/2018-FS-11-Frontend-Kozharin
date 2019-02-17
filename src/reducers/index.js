@@ -13,8 +13,9 @@ import {
     LOGIN_SUCCESS,
     FETCH_MESSAGES_REQUEST,
     FETCH_MESSAGES_SUCCESS,
-    FETCH_MESSAGES_ERROR
+    FETCH_MESSAGES_ERROR, MESSAGE_TEXT_CHANGED, SEND_MESSAGE_REQUEST, SEND_MESSAGE_ERROR
 } from '../actions/index';
+import {SEND_MESSAGE_SUCCESS} from "../actions";
 
 function userData(state={userID: 1, userName: 'Котик', userNick: 'cat228', avatarURL: '', token: ''},
                   action) {
@@ -64,28 +65,65 @@ function chatsInfo(state={0: {isFetching: false, error: -1, messages: [], savedT
         case FETCH_MESSAGES_REQUEST:
             return {
                 [action.chatID]: {
+                    ...state[action.chatID],
                     isFetching: true,
                     error: false,
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
-                    messages: state[action.chatID] ? [...state[action.chatID].messages] : []
-                }, ...state
+                    messages: state[action.chatID] ? [...state[action.chatID].messages] : [],
+                }, ...state,
             };
         case FETCH_MESSAGES_ERROR:
             return {
                 [action.chatID]: {
+                    ...state[action.chatID],
                     isFetching: false,
                     error: action.error,
-                    // Оставляем те же сообщения, что были получены ранее, при их наличии
-                    messages: state[action.chatID] ? [...state[action.chatID].messages] : []
                 }, ...state,
             };
         case FETCH_MESSAGES_SUCCESS:
             return {
+                ...state,
                 [action.chatID]: {
+                    ...state[action.chatID],
                     isFetching: false,
                     error: false,
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
-                    messages: state[action.chatID] ? [...state[action.chatID].messages, ...action.response] : []
+                    messages: state[action.chatID] ? [...state[action.chatID].messages, ...action.response] : [],
+                },
+            };
+        case MESSAGE_TEXT_CHANGED:
+            return {
+                ...state,
+                [action.chatID]: {
+                    ...state[action.chatID],
+                    savedText: action.text,
+                },
+            };
+        case SEND_MESSAGE_REQUEST:
+            return {
+                ...state,
+                [action.chatID]: {
+                    ...state[action.chatID],
+                    isSending: true,
+                    errorSending: false,
+                },
+            };
+        case SEND_MESSAGE_SUCCESS:
+            return {
+                ...state,
+                [action.chatID]: {
+                    ...state[action.chatID],
+                    isSending: false,
+                    errorSending: false,
+                },
+            };
+        case SEND_MESSAGE_ERROR:
+            return {
+                ...state,
+                [action.chatID]: {
+                    ...state[action.chatID],
+                    isSending: false,
+                    errorSending: action.error,
                 },
             };
         default:

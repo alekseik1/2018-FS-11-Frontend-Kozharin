@@ -44,10 +44,11 @@ function getChatMessages(chatId) {
 }
 
 // TODO: передавать файлы в сообщении
-function sendChatMessage(chatId, senderID, messageText) {
+function sendChatMessage(chatId, senderID, token, messageText, file, geo) {
     return makeJsonrpcRequest(
         'send_message',
-        {'chat_id': chatId, 'user_id': senderID, 'text': messageText}
+        {'chat_id': chatId, 'sender_id': senderID, 'token': token,
+            'message_text': messageText, 'files': file, 'geo': geo,}
     );
 }
 
