@@ -1,84 +1,80 @@
 import React, { Component } from 'react';
 import styles from './styles.css';
-import Input from '../../input/Input';
+import InputForm from '../../input/InputForm';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
-import {getChatMessages, sendChatMessage} from '../../../utils/backend-utils/index';
-import {chatOpened, loadChatMessages, chatClosed} from "../../../actions";
+import {
+    chatClosed,
+    fetchMessages,
+    messageTextChanged,
+    submitMessage
+} from "../../../actions";
 import { connect } from 'react-redux';
-import {isEmptyObject} from "../../../utils/js-checks";
 
 class Dialog extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            messageLimit: 100,
-            chatID: this.props.match.chatID,
-            myID: this.props.match.userID
-        };
-    }
-
     componentDidMount() {
         // Подргужаем сообщения с бекенда
-        // TODO: прикрутить сюда авторизацию
-        console.log('Dialog props:', this.props);
-        //this.props.chatOpened(this.state.chatID);
-        this.props.loadMessages(this.state.chatID, this.state.myID, this.state.messageLimit);
-    }
-
-    _onMessageSubmit(message) {
-        let mes = this.state.messages.slice();
-        mes.push({
-            text: message.text,
-            time: new Date(message.time).toLocaleString(),
-            isRead: false,
-            files: message.files,
-            isOwn: true
-        });
-
-        sendChatMessage(this.state.chatID, this.state.myID, message.text).then( () => {
-            this.setState({messages: mes, shouldScrollDown: true});
-        });
-    }
-
-    /**
-     * Вернуть, когда собеседник был последний раз онлайн
-     */
-    getLastOnline() {
-        return 'Был в сети недавно';
+        // Отправляем action о том, что надо загрузить сообщения
+        this.props.loadMessages(this.props.chatID, this.props.token);
     }
 
     render() {
-        if (this.state.myID === -1) {
-            loadChatMessages()
-        }
         return (
             <div className={styles.react_container}>
                 <Header
-                    fullName={this.state.chatName}
-                    avatarURL={''}
-                    lastOnline={this.getLastOnline()}
+                    fullName={this.props.chatName}
+                    avatarURL={this.props.chatAvatar}
+                    lastOnline={() => 'Недавно'}
                     onBack={chatClosed}
                 />
                 <div />
-                <Input onSubmit={this._onMessageSubmit.bind(this)} />
+                <MessageContainer
+                    messages={this.props.messages}
+                    ownID={this.props.userID}
+                />
+                <InputForm
+                    onMessageSubmit={ () => {
+                        console.log('DEUBGGGGG', this.props.messages);
+                        this.props.sendChatMessage(
+                            this.props.chatID, this.props.userID, this.props.token,
+                            this.props.currentText,
+                            [], [],
+                            //this.props.messages[this.props.chatID].files,
+                            //this.props.messages[this.props.chatID].geo
+                        )}
+                    }
+                    //onFilesSubmitted={}
+                    //onGeoSubmitted={}
+                    currentText={this.props.currentText}
+                    onTextChanged={(event) => this.props.saveMessageText(this.props.chatID, event.target.value)}
+                />
             </div>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    return {}
+    return {
+        // userID должнен быть вписан в store после авторизации
+        userID: state.userData.userID,
+        chatID: state.currentChat,
+        // Токен, полученный с авторизации
+        token: state.userData.token,
+        currentText: state.chatsInfo[state.currentChat] ? state.chatsInfo[state.currentChat].savedText : '',
+        //currentFiles: state.chatsInfo[state.currentChat] ? state.chatsInfo[state.currentChat].files : [],
+        //currentGeo: state.chatsInfo[state.currentChat] ? state.chatsInfo[state.currentChat].geo : [],
+        // Возьмем сообщения из store, если они там есть
+        // Если их нет, то они появятся после действия loadMessages
+        messages: state.chatsInfo[state.currentChat] ? state.chatsInfo[state.currentChat].messages : []
+    }
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    loadMessages: (chatID, myID, limit) =>  dispatch(
-        loadChatMessages(chatID, myID, limit)
-    ),
-    sendMessage: (message) => dispatch(),
-    chatOpened: (chatID) => dispatch(chatOpened(chatID)),
-    chatClosed: () => dispatch(chatClosed()),
+    loadMessages: (chatID, token) =>  dispatch(fetchMessages(chatID, token)),
+    saveMessageText: (chatID, text) => dispatch(messageTextChanged(chatID, text)),
+    sendChatMessage: (chatID, senderID, token, text, file, geo) => dispatch(
+        submitMessage(chatID, senderID, token, text, file, geo)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dialog);

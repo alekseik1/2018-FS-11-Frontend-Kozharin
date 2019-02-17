@@ -3,6 +3,7 @@ import AuthPage from "../ui-pages/AuthPage";
 import ChatsList from "../ui-pages/ChatsList";
 import Dialog from "../ui-pages/Dialog";
 import React from "react";
+import { connect } from 'react-redux';
 
 const Root = (props) => {
     return (
@@ -26,8 +27,11 @@ const Root = (props) => {
 };
 
 const mapStateToProps = state => ({
-    openedChat: state.currentChat,
 
 });
 
-export default Root;
+const mapDispatchToProps = (dispatch) => ({
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root);

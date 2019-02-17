@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom'
 import styles from './styles.css';
 import Message from "../Message/Message";
 
+const schema = require("schm");
+const messageSchema = schema({
+    isMine: true,
+    text: "Hello, message",
+    time: new Date().toLocaleString(),
+    isRead: false,
+});
+
 class MessageContainer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            messages: [],
-        }
-    }
 
     _scrollDown() {
         // TODO: возможно, постоянный поиск элемента сделает приложение менее производительным
@@ -30,12 +32,15 @@ class MessageContainer extends React.Component {
             <div className={styles.InnerScroll}>
                 <div className={styles.MessageContainer}>
                     {this.props.messages.map((element, index) => {
+                        console.log('validating message: ', element, ' || ', messageSchema.validate(element) ? 'OK': 'BAD!');
                         return <Message
-                            isMine={element.isOwn}
-                            text={element.text}
-                            time={element.time}
+                            // Тут немного синтаксис меняется
+                            isMine={element.user_id === this.props.ownID}
+                            text={element.content}
+                            time={element.added_at}
                             key={index}
-                            isRead={element.isRead}/>;
+                            // TODO: брать с бэкенда, прочитано ли сообщение
+                            isRead={false}/>;
                     })}
                 </div>
             </div>

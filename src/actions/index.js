@@ -1,4 +1,4 @@
-import {getUserInfo, getChats, getChatMessages} from '../utils/backend-utils'
+import {getUserInfo, getChats, getChatMessages, messageLimit, sendChatMessage} from '../utils/backend-utils'
 
 export const MESSAGE_SUBMITTED = 'MESSAGE_SUBMITTED';
 export const messageSubmitted = (chatID) => ({
@@ -82,7 +82,7 @@ export function loadChats(userID, token, limit=100) {
 export const CHAT_OPENED = 'CHAT_OPENED';
 export const chatOpened = (chatID=-1) => ({
     type: CHAT_OPENED,
-    chatID,
+    chatID: chatID,
 });
 
 export const LOAD_CHAT_MESSAGES = 'LOAD_CHAT_MESSAGES';
@@ -123,3 +123,73 @@ export const loginFailed = (error) => ({
     type: LOGIN_FAILED,
     error: error,
 });
+
+
+export const FETCH_MESSAGES_REQUEST = 'FETCH_MESSAGES_REQUEST';
+export const fetchMessagesRequest = (chatID) => ({
+    type: FETCH_MESSAGES_REQUEST,
+    chatID: chatID,
+});
+
+export const FETCH_MESSAGES_SUCCESS = 'FETCH_MESSAGES_SUCCESS';
+export const fetchMessagesSuccess = (chatID, response) => ({
+    type: FETCH_MESSAGES_SUCCESS,
+    chatID: chatID,
+    response: response,
+});
+
+export const FETCH_MESSAGES_ERROR = 'FETCH_MESSAGES_ERROR';
+export const fetchMessagesError = (chatID, error) => ({
+    type: FETCH_MESSAGES_ERROR,
+    chatID: chatID,
+    error: error
+});
+
+export function fetchMessages(chatID, token) {
+    return function(dispatch) {
+        // Говорим, что был запрос на загрузку чата
+        dispatch(fetchMessagesRequest(chatID));
+        return getChatMessages(chatID).then(
+            result => dispatch(fetchMessagesSuccess(chatID, result)),
+            error => dispatch(fetchMessagesError(chatID, error))
+        );
+    }
+}
+
+export const MESSAGE_TEXT_CHANGED = 'MESSAGE_TEXT_CHANGED';
+export const messageTextChanged = (chatID, newText) => ({
+    type: MESSAGE_TEXT_CHANGED,
+    chatID: chatID,
+    text: newText,
+});
+
+export const SEND_MESSAGE_REQUEST = 'SEND_MESSAGE_REQUEST';
+export const sendMessageRequest = () => ({
+    type: SEND_MESSAGE_REQUEST,
+});
+
+export const SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS';
+export const sendMessageSuccess = (result) => ({
+    type: SEND_MESSAGE_SUCCESS,
+    result: result,
+});
+
+export const SEND_MESSAGE_ERROR = 'SEND_MESSAGE_ERROR';
+export const sendMessageError = (error) => ({
+    type: SEND_MESSAGE_ERROR,
+    error: error,
+});
+
+export function submitMessage(chatID, senderID, token, text, file, geo) {
+    return function(dispatch) {
+        dispatch(sendMessageRequest());
+        return sendChatMessage(chatID, senderID, token, text, file, geo).then(
+            result => {
+                dispatch(sendMessageSuccess(result));
+                // Очистим текст после отправки
+                dispatch(messageTextChanged(chatID, ''));
+            },
+            error => dispatch(sendMessageError(error))
+        );
+    }
+}

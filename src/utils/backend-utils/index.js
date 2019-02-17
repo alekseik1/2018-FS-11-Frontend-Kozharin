@@ -2,6 +2,8 @@
 const BACKEND_URL = 'http://localhost:5000/api/';
 
 let currentID = 10;
+// Какая пачка сообщений будет грузиться
+export const messageLimit = 50;
 
 const makeJsonrpcRequest = (methodName, params) => {
     currentID++;
@@ -31,11 +33,10 @@ function getUserInfo(userID) {
 }
 
 
-function getChatMessages(chatId, userID, limit) {
-    let messages = [];
+function getChatMessages(chatId) {
     return makeJsonrpcRequest(
         'get_messages_by_chat',
-        {'chat_id': chatId, 'from_id': userID, 'limit': limit}
+        {'chat_id': chatId, 'limit': messageLimit}
     ).then(success => {
         // С бека они приходят в обратном порядке (особенность SQL)
         return ( (success.length === 0) ? [] : success.result.slice().reverse() );
@@ -43,10 +44,11 @@ function getChatMessages(chatId, userID, limit) {
 }
 
 // TODO: передавать файлы в сообщении
-function sendChatMessage(chatId, senderID, messageText) {
+function sendChatMessage(chatId, senderID, token, messageText, file, geo) {
     return makeJsonrpcRequest(
         'send_message',
-        {'chat_id': chatId, 'user_id': senderID, 'text': messageText}
+        {'chat_id': chatId, 'sender_id': senderID, 'token': token,
+            'message_text': messageText, 'files': file, 'geo': geo,}
     );
 }
 
