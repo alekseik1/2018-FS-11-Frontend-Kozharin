@@ -35,7 +35,7 @@ class MessageContainer extends React.Component {
                         console.log('validating message: ', element, ' || ', messageSchema.validate(element) ? 'OK': 'BAD!');
                         return <Message
                             // Тут немного синтаксис меняется
-                            isMine={element.userID === this.props.ownID}
+                            isMine={element.user_id === this.props.ownID}
                             text={element.content}
                             time={element.added_at}
                             key={index}
