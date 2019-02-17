@@ -59,12 +59,12 @@ function currentChat(state=-1, action) {
     }
 }
 
-function chatsInfo(state={0: {isPending: false, error: -1, messages: []}}, action) {
+function chatsInfo(state={0: {isFetching: false, error: -1, messages: [], savedText: ''}}, action) {
     switch(action.type) {
         case FETCH_MESSAGES_REQUEST:
             return {
                 [action.chatID]: {
-                    isPending: true,
+                    isFetching: true,
                     error: false,
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
                     messages: state[action.chatID] ? [...state[action.chatID].messages] : []
@@ -73,7 +73,7 @@ function chatsInfo(state={0: {isPending: false, error: -1, messages: []}}, actio
         case FETCH_MESSAGES_ERROR:
             return {
                 [action.chatID]: {
-                    isPending: false,
+                    isFetching: false,
                     error: action.error,
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
                     messages: state[action.chatID] ? [...state[action.chatID].messages] : []
@@ -82,7 +82,7 @@ function chatsInfo(state={0: {isPending: false, error: -1, messages: []}}, actio
         case FETCH_MESSAGES_SUCCESS:
             return {
                 [action.chatID]: {
-                    isPending: false,
+                    isFetching: false,
                     error: false,
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
                     messages: state[action.chatID] ? [...state[action.chatID].messages, ...action.response] : []
