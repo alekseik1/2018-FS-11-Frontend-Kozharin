@@ -3,44 +3,21 @@ import styles from './styles.css';
 import InputForm from '../../input/InputForm';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
-import {getChatMessages, sendChatMessage} from '../../../utils/backend-utils/index';
 import {
-    chatOpened,
-    loadChatMessages,
     chatClosed,
     fetchMessages,
     messageTextChanged,
     submitMessage
 } from "../../../actions";
 import { connect } from 'react-redux';
-import {isEmptyObject} from "../../../utils/js-checks";
-import {messageLimit} from "../../../utils/backend-utils/index";
 
 class Dialog extends Component {
 
     componentDidMount() {
         // Подргужаем сообщения с бекенда
-        // TODO: прикрутить сюда авторизацию
         // Отправляем action о том, что надо загрузить сообщения
         this.props.loadMessages(this.props.chatID, this.props.token);
     }
-
-    /*
-    _onMessageSubmit(message) {
-        let mes = this.state.messages.slice();
-        mes.push({
-            text: message.text,
-            time: new Date(message.time).toLocaleString(),
-            isRead: false,
-            files: message.files,
-            isOwn: true
-        });
-
-        sendChatMessage(this.props.match.params.chatID, this.props.userID, message.text).then( () => {
-            this.setState({messages: mes, shouldScrollDown: true});
-        });
-    }
-    */
 
     render() {
         return (
