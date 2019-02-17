@@ -69,6 +69,7 @@ class Dialog extends Component {
                     }
                     //onFilesSubmitted={}
                     //onGeoSubmitted={}
+                    currentText={this.props.currentText}
                     onTextChanged={(event) => this.props.saveMessageText(this.props.chatID, event.target.value)}
                 />
             </div>
