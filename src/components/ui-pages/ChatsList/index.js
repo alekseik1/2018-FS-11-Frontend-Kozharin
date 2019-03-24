@@ -19,13 +19,15 @@ class ChatsList extends React.Component {
     _generateChatListItems(chats) {
         return Object.keys(chats).map( (key) => {
             let item = this.props.chats[key];
+            //debugger;
+            console.log('item is', item);
             return (
                 <ChatListItem
-                    avatarURL={item.avatar}
-                    fullName={item.chatName}
-                    lastMessagePreview={item.lastMessagePreview}
-                    clickCallback={() => this.props.openChat(item.chatID)}
-                    chatID={item.chatID}
+                    avatarURL={''}
+                    fullName={item.topic}
+                    lastMessagePreview={null}
+                    clickCallback={() => this.props.openChat(item.id)}
+                    chatID={item.id}
                     key={key}
                 />
             )
