@@ -66,14 +66,6 @@ export function loadChats(userID, token, limit=100) {
     return function(dispatch) {
         getChats(userID, token, limit).then(chats => {
             chats = chats.result;
-            // NOTE: здесь преобразуем от структуры бека к структуре фронта
-            chats = chats.map(item => {
-                return { chatID: item.chat_id, chatName: item.topic, avatar: item.avatar,
-                    isGroup: item.is_group_chat === 0, lastReadID: item.last_read_message_id,
-                    newMessages: item.new_messages,
-                    messages: []
-                }
-            });
             dispatch(chatsLoaded(chats));
         }, error => console.log(error));
     }
