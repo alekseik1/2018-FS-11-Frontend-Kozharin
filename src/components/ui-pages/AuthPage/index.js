@@ -12,7 +12,7 @@ import {
     updateUserData
 } from "../../../actions";
 
-const DEBUG_USER_ID = 0;
+const DEBUG_USER_ID = 2;
 const IS_DEBUG = true;
 
 const AuthPage = ({ userID, handleLogin, loginDEBUG }) => {
