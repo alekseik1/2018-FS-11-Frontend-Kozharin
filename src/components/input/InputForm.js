@@ -3,6 +3,8 @@ import styles from './styles.css';
 import TextInput from './text-input/TextInput';
 import FileInput from './file-input/FileInput';
 import GeoInput from "./geo-input/GeoInput";
+import EmojiForm from './emoji-form/EmojiForm'
+import PropTypes from 'prop-types';
 
 const InputForm = ({ onMessageSubmit, onTextChanged, onFilesSubmitted, onGeoSubmitted, currentText }) => {
     return (
@@ -15,11 +17,22 @@ const InputForm = ({ onMessageSubmit, onTextChanged, onFilesSubmitted, onGeoSubm
             <FileInput
                 onSuccess={onFilesSubmitted}
             />
+            <EmojiForm
+
+            />
             <GeoInput
                 onSuccess={onGeoSubmitted}
             />
         </div>
     );
+};
+
+InputForm.propTypes = {
+    onMessageSubmit: PropTypes.func,
+    onTextChanged: PropTypes.func,
+    onFilesSubmitted: PropTypes.func,
+    onGeoSubmitted: PropTypes.func,
+    currentText: PropTypes.string,
 };
 
 export default InputForm;
