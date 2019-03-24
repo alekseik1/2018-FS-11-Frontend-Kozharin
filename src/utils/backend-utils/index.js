@@ -47,8 +47,13 @@ function getChatMessages(chatId) {
 function sendChatMessage(chatId, senderID, token, messageText, file, geo) {
     return makeJsonrpcRequest(
         'send_message',
-        {'chat_id': chatId, 'sender_id': senderID, 'token': token,
-            'message_text': messageText, 'files': file, 'geo': geo,}
+        {
+            'chat_id': chatId,
+            'sender_id': senderID,
+            'token': token,
+            'text': messageText,
+            'files': file, 'geo': geo,
+        }
     );
 }
 
