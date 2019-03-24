@@ -14,7 +14,7 @@ const Root = (props) => {
                     return <ChatsList {...props} />;
                 }}
                 />
-                <Route exact path='/chat:chatID?&id:userID?'
+                <Route exact path='/chat:chatID'
                        render={(props) =>
                            <Dialog {...props}
                                prevLink={'/'}
