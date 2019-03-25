@@ -1,18 +1,67 @@
 :local(.em_visible) {
     position: absolute;
     right: 0;
-    border: aliceblue 1px solid;
+    border: black 5px double;
     bottom: 50px;
     height: 150px;
-    background: aqua;
+    background: white;
     width: 700px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+}
+
+:local(a) {
+    padding: 1px;
 }
 
 :local(.em_hidden) {
     display: none;
 }
 
-:local(.EmojiForm) {
+:local(.smile) {
+    background: url('../../../sprites/emoji.png') no-repeat -306px -108px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.surprised) {
+    background: url('../../../sprites/emoji.png') no-repeat -324px -108px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.laugh) {
+    background: url('../../../sprites/emoji.png') no-repeat -342px -108px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.agree) {
+    background: url('../../../sprites/emoji.png') no-repeat -18px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.heh) {
+    background: url('../../../sprites/emoji.png') no-repeat -18px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.oh) {
+    background: url('../../../sprites/emoji.png') no-repeat -54px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.nothappy) {
+    background: url('../../../sprites/emoji.png') no-repeat -72px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+:local(.EmojiButton) {
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cpath%20opacity%3D%22.4%22%20d%3D%22M0%200h24v24H0z%22%2F%3E%3Cpath%20fill%3D%22%23828A99%22%20fill-rule%3D%22nonzero%22%20d%3D%22M2%2012C2%206.477%206.477%202%2012%202s10%204.477%2010%2010-4.477%2010-10%2010S2%2017.523%202%2012zm18.3%200a8.3%208.3%200%201%200-16.6%200%208.3%208.3%200%200%200%2016.6%200zm-11.05-.5a1.25%201.25%200%201%201%200-2.5%201.25%201.25%200%200%201%200%202.5zm5.5%200a1.25%201.25%200%201%201%200-2.5%201.25%201.25%200%200%201%200%202.5z%22%2F%3E%3Cpath%20stroke%3D%22%23828A99%22%20stroke-width%3D%221.7%22%20d%3D%22M9%2014.85c.833.767%201.833%201.15%203%201.15s2.167-.383%203-1.15%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     background-position: center;
