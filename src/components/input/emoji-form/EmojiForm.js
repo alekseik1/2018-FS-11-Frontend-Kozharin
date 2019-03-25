@@ -36,7 +36,7 @@ class EmojiForm extends React.Component {
         return (
             <React.Fragment>
                 <button
-                    className={styles.EmojiButtom}
+                    className={styles.EmojiButton}
                     onClick={this.toggleVisibility.bind(this)}
                 />
                 <EmojiKeyboard visible={this.state.visible}/>
