@@ -7,6 +7,7 @@ const TextInput = ({ onChangeListener, onEnterKeyListener, currentText = '' }) =
         <ContentEditable
             className={styles.TextInput}
             html={currentText}
+            onEnterKeyListener={onEnterKeyListener}
             onChange={onChangeListener}/>
     );
 };

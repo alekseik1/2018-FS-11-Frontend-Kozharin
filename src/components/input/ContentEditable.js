@@ -9,7 +9,12 @@ class ContentEditable extends React.Component{
             className={this.props.className}
             onInput={this.emitChange.bind(this)}
             onBlur={this.emitChange.bind(this)}
-            style={{display: 'flex', flexDirection: 'row'}}
+            onKeyPress={(e) => {
+                if (e.charCode === 13) {
+                        this.props.onEnterKeyListener();
+                        this.forceUpdate();
+                }
+            }}
             contentEditable
             dangerouslySetInnerHTML={{__html: this.props.html}} />;
     }
@@ -32,7 +37,8 @@ class ContentEditable extends React.Component{
 
     static propTypes = {
         className: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        onEnterKeyListener: PropTypes.func,
     }
 }
 
