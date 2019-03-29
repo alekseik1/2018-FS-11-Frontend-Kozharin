@@ -2,17 +2,17 @@ import React from 'react';
 import styles from './styles.css';
 import './emoji_sprites.css';
 
-export var emojiList =['smile', 'laugh', 'surprised', 'agree', 'heh', 'oh', 'nothappy'];
+export const emojiList =['smile', 'laugh', 'surprised', 'agree', 'heh', 'oh', 'nothappy'];
 
-const Emoji = ({emojiName, onEmojiSelected }) => {
-    return <a className={emojiName} onClick={onEmojiSelected} />;
+const Emoji = ({emojiName, onClick }) => {
+    return <a className={emojiName} onClick={onClick} />;
 };
 
-const EmojiKeyboard = ( {visible, onEmojiSelected} ) => {
+const EmojiKeyboard = ( {visible, onSelected} ) => {
     return (
         <div className={visible ? styles.em_visible : styles.em_hidden}>
             {emojiList.map( (emojiName) =>
-                <Emoji emojiName={emojiName} onEmojiSelected={onEmojiSelected}/>
+                <Emoji emojiName={emojiName} onClick={(e) => onSelected(emojiName)}/>
                 )
             }
         </div>
@@ -37,7 +37,8 @@ class EmojiForm extends React.Component {
                     className={styles.EmojiButton}
                     onClick={this.toggleVisibility.bind(this)}
                 />
-                <EmojiKeyboard visible={this.state.visible} onEmojiSelected={() => console.log('Emoji selected')}/>
+                <EmojiKeyboard visible={this.state.visible}
+                               onSelected={(emojiName) => this.props.onEmojiSelected(emojiName)}/>
             </React.Fragment>
         );
     }
