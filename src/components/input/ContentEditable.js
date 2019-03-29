@@ -9,6 +9,7 @@ class ContentEditable extends React.Component{
             className={this.props.className}
             onInput={this.emitChange.bind(this)}
             onBlur={this.emitChange.bind(this)}
+            style={{display: 'flex', flexDirection: 'row'}}
             contentEditable
             dangerouslySetInnerHTML={{__html: this.props.html}} />;
     }
