@@ -1,0 +1,41 @@
+.smile {
+    background: url('../../../sprites/emoji.png') no-repeat -306px -108px;
+    width: 16px;
+    height: 16px;
+}
+
+.surprised {
+    background: url('../../../sprites/emoji.png') no-repeat -324px -108px;
+    width: 16px;
+    height: 16px;
+}
+
+.laugh {
+    background: url('../../../sprites/emoji.png') no-repeat -342px -108px;
+    width: 16px;
+    height: 16px;
+}
+
+.agree {
+    background: url('../../../sprites/emoji.png') no-repeat -18px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+.heh {
+    background: url('../../../sprites/emoji.png') no-repeat -18px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+.oh {
+    background: url('../../../sprites/emoji.png') no-repeat -54px -126px;
+    width: 16px;
+    height: 16px;
+}
+
+.nothappy {
+    background: url('../../../sprites/emoji.png') no-repeat -72px -126px;
+    width: 16px;
+    height: 16px;
+}

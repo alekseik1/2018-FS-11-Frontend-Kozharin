@@ -1,22 +1,20 @@
 import React from 'react';
 import styles from './styles.css';
+import './emoji_sprites.css';
 
 export var emojiList =['smile', 'laugh', 'surprised', 'agree', 'heh', 'oh', 'nothappy'];
 
-const htmlEmojiList = (emojiList) => {
-    let htmlList = [];
-    for (let i=0; i < emojiList.length; i++) {
-        htmlList.push(
-            <a className={styles[emojiList[i]]} key={i} />
-        );
-    }
-    return htmlList;
+const Emoji = ({emojiName, onEmojiSelected }) => {
+    return <a className={emojiName} onClick={onEmojiSelected} />;
 };
 
-const EmojiKeyboard = (props) => {
+const EmojiKeyboard = ( {visible, onEmojiSelected} ) => {
     return (
-        <div className={props.visible ? styles.em_visible : styles.em_hidden}>
-            {htmlEmojiList(emojiList)}
+        <div className={visible ? styles.em_visible : styles.em_hidden}>
+            {emojiList.map( (emojiName) =>
+                <Emoji emojiName={emojiName} onEmojiSelected={onEmojiSelected}/>
+                )
+            }
         </div>
     )
 };
@@ -39,7 +37,7 @@ class EmojiForm extends React.Component {
                     className={styles.EmojiButton}
                     onClick={this.toggleVisibility.bind(this)}
                 />
-                <EmojiKeyboard visible={this.state.visible}/>
+                <EmojiKeyboard visible={this.state.visible} onEmojiSelected={() => console.log('Emoji selected')}/>
             </React.Fragment>
         );
     }
