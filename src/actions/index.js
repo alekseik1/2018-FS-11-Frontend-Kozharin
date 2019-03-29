@@ -172,6 +172,13 @@ export const sendMessageError = (error) => ({
     error: error,
 });
 
+export const EMOJI_SELECTED = 'EMOJI_SELECTED';
+export const emojiSelected = (chatID, emojiHTML) => ({
+    type: EMOJI_SELECTED,
+    emojiHTML: emojiHTML,
+    chatID: chatID,
+});
+
 export function submitMessage(chatID, senderID, token, text, file, geo) {
     return function(dispatch) {
         dispatch(sendMessageRequest());

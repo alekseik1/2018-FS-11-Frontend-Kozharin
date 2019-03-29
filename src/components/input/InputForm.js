@@ -6,7 +6,7 @@ import GeoInput from "./geo-input/GeoInput";
 import EmojiForm from './emoji-form/EmojiForm'
 import PropTypes from 'prop-types';
 
-const InputForm = ({ onMessageSubmit, onTextChanged, onFilesSubmitted, onGeoSubmitted, currentText }) => {
+const InputForm = ({ onMessageSubmit, onTextChanged, onFilesSubmitted, onGeoSubmitted, currentText, onEmojiSelected }) => {
     return (
         <div className={styles.Input}>
             <TextInput
@@ -18,7 +18,7 @@ const InputForm = ({ onMessageSubmit, onTextChanged, onFilesSubmitted, onGeoSubm
                 onSuccess={onFilesSubmitted}
             />
             <EmojiForm
-
+                onEmojiSelected={onEmojiSelected}
             />
             <GeoInput
                 onSuccess={onGeoSubmitted}
@@ -33,6 +33,7 @@ InputForm.propTypes = {
     onFilesSubmitted: PropTypes.func,
     onGeoSubmitted: PropTypes.func,
     currentText: PropTypes.string,
+    onEmojiSelected: PropTypes.func,
 };
 
 export default InputForm;
