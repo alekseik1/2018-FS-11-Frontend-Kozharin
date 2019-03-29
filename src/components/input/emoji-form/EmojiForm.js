@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './styles.css';
 import './emoji_sprites.css';
+import PropTypes from 'prop-types';
 
 export const emojiList =['smile', 'laugh', 'surprised', 'agree', 'heh', 'oh', 'nothappy'];
 
@@ -41,6 +42,10 @@ class EmojiForm extends React.Component {
                                onSelected={(emojiName) => this.props.onEmojiSelected(emojiName)}/>
             </React.Fragment>
         );
+    }
+
+    static propTypes = {
+        onEmojiSelected: PropTypes.func,
     }
 }
 
