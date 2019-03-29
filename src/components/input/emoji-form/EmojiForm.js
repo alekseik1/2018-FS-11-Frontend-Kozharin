@@ -7,7 +7,15 @@ import { renderToString } from 'react-dom/server';
 export const emojiList =['smile', 'laugh', 'surprised', 'agree', 'heh', 'oh', 'nothappy'];
 
 const Emoji = ({emojiName, onClick }) => {
-    return <div className={emojiName} onClick={onClick} />;
+    return <img
+        contentEditable={false}
+
+        tabIndex={'-1'}
+        className={emojiName}
+        onClick={onClick}
+        // Костыль. Отображаем прозрачную картинку, затем в CSS background прорисовываем смайлик
+        src={'http://s01.yapfiles.ru/files/468797/Bigsparkle.png'}
+    />;
 };
 
 const _get_emoji_component = (emojiName, onSelected) => (
