@@ -97,7 +97,8 @@ function chatsInfo(state={0: {isFetching: false, error: -1, messages: [], savedT
                 ...state,
                 [action.chatID]: {
                     ...state[action.chatID],
-                    savedText: state[action.chatID].savedText + action.emojiHTML,
+                    savedText: ( (state[action.chatID].savedText) === undefined ? "" : state[action.chatID].savedText )
+                        + action.emojiHTML,
                 }
             };
         case MESSAGE_TEXT_CHANGED:
