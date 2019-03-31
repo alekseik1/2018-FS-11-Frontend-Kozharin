@@ -21,6 +21,7 @@ const Emoji = ({emojiName, onClick }) => {
 const _get_emoji_component = (emojiName, onSelected) => (
     <Emoji
         emojiName={emojiName}
+        key={emojiName}
         onClick={(e) => onSelected(emojiName)}
     />);
 
