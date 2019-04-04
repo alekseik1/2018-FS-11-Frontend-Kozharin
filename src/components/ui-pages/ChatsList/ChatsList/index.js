@@ -9,6 +9,7 @@ const ChatListItem = ({chatID, fullName, avatarURL, lastMessagePreview, clickCal
              }}>
             <img
                 src={avatarURL}
+                alt={'Chat icon'}
                 className={styles.avatar}
             />
             <div className={styles.dialog_description}>

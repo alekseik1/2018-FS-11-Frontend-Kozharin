@@ -1,11 +1,7 @@
 import React from 'react';
 import {Redirect} from "react-router-dom";
-import { dispatch } from 'react-redux'
 import { connect } from 'react-redux';
-import styles from './styles.css';
 import {
-    LOGIN_FAILED,
-    LOGIN_REQUESTED,
     loginFailed,
     loginRequested,
     loginSuccess,

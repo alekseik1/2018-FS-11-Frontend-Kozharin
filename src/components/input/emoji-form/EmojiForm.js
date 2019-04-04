@@ -9,7 +9,7 @@ export const emojiList =['smile', 'laugh', 'surprised', 'agree', 'heh', 'oh', 'n
 const Emoji = ({emojiName, onClick }) => {
     return <img
         contentEditable={false}
-
+        alt={'emoji'}
         tabIndex={'-1'}
         className={emojiName}
         onClick={onClick}
@@ -22,7 +22,7 @@ const _get_emoji_component = (emojiName, onSelected) => (
     <Emoji
         emojiName={emojiName}
         key={emojiName}
-        onClick={(e) => onSelected(emojiName)}
+        onClick={() => onSelected(emojiName)}
     />);
 
 const EmojiKeyboard = ( {visible, onSelected} ) => {
