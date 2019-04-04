@@ -23,24 +23,19 @@ const makeJsonrpcRequest = (methodName, params) => {
 /**
  * Загружает диалоги пользователя
  * @param userID id пользователя
+ * @param token токен пользователя
+ * @param limit максимальное количество диалогов
  */
 function getChats(userID, token, limit=100) {
     return makeJsonrpcRequest('get_user_chats', {'user_id': userID, 'limit': limit} )
 }
 
-function getUserInfo(userID) {
-    return makeJsonrpcRequest('get_user_info', {'user_id': userID} );
-}
 
-
-function getChatMessages(chatId) {
+function getChatMessages(chatId, token) {
     return makeJsonrpcRequest(
         'get_messages_by_chat',
-        {'chat_id': chatId, 'limit': messageLimit}
-    ).then(success => {
-        // С бека они приходят в обратном порядке (особенность SQL)
-        return ( (success.length === 0) ? [] : success.result.slice().reverse() );
-    });
+        {'chat_id': chatId, 'limit': messageLimit, 'token': token}
+    ).then(success => (success.length === 0) ? [] : success.result.slice() );
 }
 
 // TODO: передавать файлы в сообщении
@@ -57,4 +52,4 @@ function sendChatMessage(chatId, senderID, token, messageText, file, geo) {
     );
 }
 
-export {getChatMessages, getChats, sendChatMessage, getUserInfo};
+export {getChatMessages, getChats, sendChatMessage};

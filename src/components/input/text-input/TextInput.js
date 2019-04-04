@@ -1,15 +1,14 @@
 import React from 'react';
 import styles from './styles.css';
+import ContentEditable from '../ContentEditable';
 
 const TextInput = ({ onChangeListener, onEnterKeyListener, currentText = '' }) => {
     return (
-        <input
+        <ContentEditable
             className={styles.TextInput}
-            onChange={onChangeListener}
-            onKeyPress={(e) => (e.charCode === 13) ? onEnterKeyListener() : null}
-            value={currentText}
-            placeholder={'Введите сообщение...'}
-        />
+            html={currentText}
+            onEnterKeyListener={onEnterKeyListener}
+            onChange={onChangeListener}/>
     );
 };
 

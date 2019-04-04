@@ -2,18 +2,14 @@ import { combineReducers } from "redux";
 import {
     CHAT_MESSAGES_LOADED,
     CHATS_LOADED,
-    FILES_SUBMITTED,
-    GEO_SUBMITTED,
     CHAT_OPENED,
-    TEXT_SUBMITTED,
     UPDATE_USER_DATA,
     CHAT_CLOSED,
     LOGIN_FAILED,
-    LOGIN_REQUESTED,
-    LOGIN_SUCCESS,
     FETCH_MESSAGES_REQUEST,
     FETCH_MESSAGES_SUCCESS,
-    FETCH_MESSAGES_ERROR, MESSAGE_TEXT_CHANGED, SEND_MESSAGE_REQUEST, SEND_MESSAGE_ERROR
+    FETCH_MESSAGES_ERROR, MESSAGE_TEXT_CHANGED, SEND_MESSAGE_REQUEST, SEND_MESSAGE_ERROR,
+    EMOJI_SELECTED
 } from '../actions/index';
 import {SEND_MESSAGE_SUCCESS} from "../actions";
 
@@ -90,6 +86,15 @@ function chatsInfo(state={0: {isFetching: false, error: -1, messages: [], savedT
                     // Оставляем те же сообщения, что были получены ранее, при их наличии
                     messages: state[action.chatID] ? [...state[action.chatID].messages, ...action.response] : [],
                 },
+            };
+        case EMOJI_SELECTED:
+            return {
+                ...state,
+                [action.chatID]: {
+                    ...state[action.chatID],
+                    savedText: ( (state[action.chatID].savedText) === undefined ? "" : state[action.chatID].savedText )
+                        + action.emojiHTML,
+                }
             };
         case MESSAGE_TEXT_CHANGED:
             return {

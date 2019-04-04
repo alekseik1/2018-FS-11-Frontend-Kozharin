@@ -4,7 +4,7 @@ import InputForm from '../../input/InputForm';
 import MessageContainer from '../../containers/message-container/MessageContainer';
 import Header from '../../containers/header';
 import {
-    chatClosed,
+    chatClosed, emojiSelected,
     fetchMessages,
     messageTextChanged,
     submitMessage
@@ -25,7 +25,7 @@ class Dialog extends Component {
                 <Header
                     fullName={this.props.chatName}
                     avatarURL={this.props.chatAvatar}
-                    lastOnline={() => 'Недавно'}
+                    lastOnline={'Недавно'}
                     onBack={chatClosed}
                 />
                 <div />
@@ -48,6 +48,7 @@ class Dialog extends Component {
                     //onGeoSubmitted={}
                     currentText={this.props.currentText}
                     onTextChanged={(event) => this.props.saveMessageText(this.props.chatID, event.target.value)}
+                    onEmojiSelected={(emojiHTML) => this.props.addEmojiToText(this.props.chatID, emojiHTML)}
                 />
             </div>
         );
@@ -73,6 +74,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     loadMessages: (chatID, token) =>  dispatch(fetchMessages(chatID, token)),
     saveMessageText: (chatID, text) => dispatch(messageTextChanged(chatID, text)),
+    addEmojiToText: (chatID, emojiHTML) => dispatch(emojiSelected(chatID, emojiHTML)),
     sendChatMessage: (chatID, senderID, token, text, file, geo) => dispatch(
         submitMessage(chatID, senderID, token, text, file, geo)),
 });
