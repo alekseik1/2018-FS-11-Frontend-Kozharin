@@ -25,7 +25,7 @@ class Dialog extends Component {
                 <Header
                     fullName={this.props.chatName}
                     avatarURL={this.props.chatAvatar}
-                    lastOnline={() => 'Недавно'}
+                    lastOnline={'Недавно'}
                     onBack={chatClosed}
                 />
                 <div />
